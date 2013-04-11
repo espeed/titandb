@@ -163,10 +163,10 @@ img.alignleft {
 
 
 
-#authors ul { list-style: none; margin-left: 0; padding-left: 0;}
-#authors ul li { line-height: 1.5em; margin-bottom: 10px; }
-#authors li label {display: block; float: left; width: 300px; padding-top: 0px;   }
-#authors ul img {padding: 0px;}
+#aurelius ul { list-style: none; margin-left: 0; padding-left: 0;}
+#aurelius ul li { line-height: 1.5em; margin-bottom: 10px; }
+#aurelius li label {display: block; float: left; width: 300px; padding-top: 0px;   }
+#aurelius ul img {padding: 0px;}
 .photo { float: left; width: 110px; padding-right: 12px; }
 .photo img { width: 110px; border: 1px solid black; margin: 0; padding: 0; }
 .bio { float: left; width: 864px; font-size: 14px; }
