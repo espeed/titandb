@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+    <head>
+      <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+      </head>
+    <body>
+      
+
+<script type="text/javascript">
+    function validateEmail(email) {
+        var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        return re.test(email);
+    }
+    function postContactToGoogle(){
+        var email = $('#email').val();
+        if ((email !== "") && (validateEmail(email))) {
+            $.ajax({
+                url: "https://docs.google.com/d/1yihXEMtV6UliSV6ER0SDlZBH_Gce2i3MI1eZS49qtUs/formResponse",
+                data: {"entry.1" : email},
+                type: "POST",
+                dataType: "xml",
+                statusCode: {
+                    0: function (){
+                        $('#email').val("");
+ 
+                        //Success message
+ 
+                    },
+                    200: function (){
+ 
+                        $('#email').val("");
+ 
+                        //Success Message
+ 
+                    }
+                }
+            });
+        }
+        else {
+ 
+ 
+            //Error message
+ 
+        }
+    }
+</script>
+
+<div id="form" class="contact-us-form">
+    <div class="title">
+        <strong>Have any questions?</strong>
+    </div>
+    <div class="subtitle">
+        <strong>Drop us a line</strong>
+    </div>
+    <form id="callus" target="_self" onsubmit="" action="javascript: postContactToGoogle()">
+         <fieldset>
+            <label for="email">What's your email? *</label>
+            <input id="email" type="text" name="email">
+        </fieldset>
+         <div style="text-align: right; padding-bottom: 15px;">* Required</div>
+        <div style="width: 100%; display: block; float: right;">
+            <button id="send" type="submit">
+                Contact Us
+            </button>
+        </div>
+        <div style="width: 100%; display: block; float: right; padding-top: 15px;">
+            <div class="requestSubmited" style="display:none; text-align: center;">Your request has been sent!</div>
+        </div>
+    </form>
+</div>
+
+</body>
+</html>

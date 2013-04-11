@@ -1,0 +1,926 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!-- saved from url=(0100)http://thinkaurelius.com/2013/03/30/titan-server-from-a-single-server-to-a-highly-available-cluster/ -->
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en"><!--
+	generated in 0.329 seconds
+	62639 bytes batcached for 300 seconds
+--><head profile="http://gmpg.org/xfn/11"><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	
+	<title>Titan Server: From a Single Server to a Highly Available Cluster | Aurelius</title>
+	<link rel="pingback" href="http://thinkaurelius.com/xmlrpc.php">
+			<script src="./Titan Server  From a Single Server to a Highly Available Cluster   Aurelius_files/quant.js" async="" type="text/javascript"></script><script src="./Titan Server  From a Single Server to a Highly Available Cluster   Aurelius_files/remote-login.php" type="text/javascript"></script>
+		<script type="text/javascript">
+		/* <![CDATA[ */
+			if ( 'function' === typeof WPRemoteLogin ) {
+				document.cookie = "wordpress_test_cookie=test; path=/";
+				if ( document.cookie.match( /(;|^)\s*wordpress_test_cookie\=/ ) ) {
+					WPRemoteLogin();
+				}
+			}
+		/* ]]> */
+		</script>
+		<link rel="alternate" type="application/rss+xml" title="Aurelius » Feed" href="http://thinkaurelius.com/feed/">
+<link rel="alternate" type="application/rss+xml" title="Aurelius » Comments Feed" href="http://thinkaurelius.com/comments/feed/">
+<link rel="alternate" type="application/rss+xml" title="Aurelius » Titan Server: From a Single Server to a Highly Available Cluster Comments Feed" href="http://thinkaurelius.com/2013/03/30/titan-server-from-a-single-server-to-a-highly-available-cluster/feed/">
+<script type="text/javascript">
+/* <![CDATA[ */
+function addLoadEvent(func){var oldonload=window.onload;if(typeof window.onload!='function'){window.onload=func;}else{window.onload=function(){oldonload();func();}}}
+/* ]]> */
+</script>
+<link rel="stylesheet" id="all-css-0" href="./Titan Server  From a Single Server to a Highly Available Cluster   Aurelius_files/saved_resource.css" type="text/css" media="all">
+<script type="text/javascript">
+/* <![CDATA[ */
+var LoggedOutFollow = {"invalid_email":"Your subscription did not succeed, please try again with a valid email address."};
+/* ]]> */
+</script>
+<script type="text/javascript" src="./Titan Server  From a Single Server to a Highly Available Cluster   Aurelius_files/saved_resource(1).css"></script>
+<link rel="stylesheet" id="all-css-0" href="./Titan Server  From a Single Server to a Highly Available Cluster   Aurelius_files/style.css" type="text/css" media="all">
+<!--[if lt IE 8]>
+<link rel='stylesheet' id='highlander-comments-ie7-css'  href='http://s2.wp.com/wp-content/mu-plugins/highlander-comments/style-ie7.css?m=1351637563g&#038;ver=20110606' type='text/css' media='all' />
+<![endif]-->
+<link rel="EditURI" type="application/rsd+xml" title="RSD" href="http://thinkaurelius.wordpress.com/xmlrpc.php?rsd">
+<link rel="wlwmanifest" type="application/wlwmanifest+xml" href="http://thinkaurelius.wordpress.com/wp-includes/wlwmanifest.xml"> 
+<link rel="prev" title="Polyglot Persistence and Query with Gremlin" href="http://thinkaurelius.com/2013/02/04/polyglot-persistence-and-query-with-gremlin/">
+<meta name="generator" content="WordPress.com">
+<link rel="canonical" href="./Titan Server  From a Single Server to a Highly Available Cluster   Aurelius_files/Titan Server  From a Single Server to a Highly Available Cluster   Aurelius.html">
+<link rel="shortlink" href="http://wp.me/p263tl-10j">
+<link rel="alternate" type="application/json+oembed" href="http://public-api.wordpress.com/oembed/1.0/?format=json&url=http%3A%2F%2Fthinkaurelius.com%2F2013%2F03%2F30%2Ftitan-server-from-a-single-server-to-a-highly-available-cluster%2F&for=wpcom-auto-discovery"><link rel="alternate" type="application/xml+oembed" href="http://public-api.wordpress.com/oembed/1.0/?format=xml&url=http%3A%2F%2Fthinkaurelius.com%2F2013%2F03%2F30%2Ftitan-server-from-a-single-server-to-a-highly-available-cluster%2F&for=wpcom-auto-discovery">
+<!-- Jetpack Open Graph Tags -->
+<meta property="og:type" content="article">
+<meta property="og:title" content="Titan Server: From a Single Server to a Highly Available Cluster">
+<meta property="og:url" content="http://thinkaurelius.com/2013/03/30/titan-server-from-a-single-server-to-a-highly-available-cluster/">
+<meta property="og:description" content="Titan is a distributed graph database capable of storing graphs on the order of hundreds of billions of edges while, at the same time, supporting billions of real-time graph traversals a day. For m...">
+<meta property="og:site_name" content="Aurelius">
+<meta property="og:image" content="http://i1.wp.com/thinkaurelius.files.wordpress.com/2013/03/titan-full-architecture.png?fit=1000%2C1000">
+<meta property="og:image" content="http://i0.wp.com/thinkaurelius.files.wordpress.com/2013/03/titan-http-rexpro.png?fit=1000%2C1000">
+<meta property="og:image" content="http://i2.wp.com/thinkaurelius.files.wordpress.com/2013/03/roman-forum.png?fit=1000%2C1000">
+<meta property="og:image" content="http://i2.wp.com/thinkaurelius.files.wordpress.com/2013/03/roman-room.png?fit=1000%2C1000">
+<meta name="twitter:site" content="@wordpressdotcom">
+<meta name="twitter:image" content="http://i1.wp.com/thinkaurelius.files.wordpress.com/2013/03/titan-full-architecture.png">
+<meta name="twitter:card" content="summary">
+<link rel="shortcut icon" type="image/x-icon" href="http://1.gravatar.com/blavatar/d863226182042db0eeff7030a8842b06?s=16" sizes="16x16">
+<link rel="icon" type="image/x-icon" href="http://1.gravatar.com/blavatar/d863226182042db0eeff7030a8842b06?s=16" sizes="16x16">
+<link rel="apple-touch-icon-precomposed" href="http://0.gravatar.com/blavatar/843a84d57684ecfd8f4c4c9d46d022bc?s=114">
+<link rel="openid.server" href="http://thinkaurelius.wordpress.com/?openidserver=1">
+<link rel="openid.delegate" href="http://thinkaurelius.wordpress.com/">
+<link rel="search" type="application/opensearchdescription+xml" href="http://thinkaurelius.com/osd.xml" title="Aurelius">
+<link rel="search" type="application/opensearchdescription+xml" href="http://wordpress.com/opensearch.xml" title="WordPress.com">
+		<style>
+		/* <![CDATA[ */
+		/* Block: reblog */
+		
+		.reblog-from img                   { margin: 0 10px 0 0; vertical-align: middle; padding: 0; border: 0; }
+		.reblogger-note img.avatar         { float: left; padding: 0; border: 0; }
+		.reblogger-note-content            { margin: 0 0 20px; }
+		.reblog-post .wpcom-enhanced-excerpt-content { border-left: 3px solid #eee; padding-left: 15px; }
+		.reblog-post ul.thumb-list         { display: block; list-style: none; margin: 2px 0; padding: 0; clear: both; }
+		.reblog-post ul.thumb-list li      { display: inline; margin: 0; padding: 0 1px; border: 0; }
+		.reblog-post ul.thumb-list li a    { margin: 0; padding: 0; border: 0; }
+		.reblog-post ul.thumb-list li img  { margin: 0; padding: 0; border: 0; }
+		
+		.reblog-post .wpcom-enhanced-excerpt { clear: both; }
+		
+		.reblog-post .wpcom-enhanced-excerpt address,
+		.reblog-post .wpcom-enhanced-excerpt li,
+		.reblog-post .wpcom-enhanced-excerpt h1,
+		.reblog-post .wpcom-enhanced-excerpt h2,
+		.reblog-post .wpcom-enhanced-excerpt h3,
+		.reblog-post .wpcom-enhanced-excerpt h4,
+		.reblog-post .wpcom-enhanced-excerpt h5,
+		.reblog-post .wpcom-enhanced-excerpt h6,
+		.reblog-post .wpcom-enhanced-excerpt p { font-size: 100% !important; }
+		
+		.reblog-post .wpcom-enhanced-excerpt blockquote,
+		.reblog-post .wpcom-enhanced-excerpt pre,
+		.reblog-post .wpcom-enhanced-excerpt code,
+		.reblog-post .wpcom-enhanced-excerpt q { font-size: 98% !important; }
+		
+
+		/* ]]> */
+		</style>
+		<meta name="application-name" content="Aurelius"><meta name="msapplication-window" content="width=device-width;height=device-height"><meta name="msapplication-tooltip" content="Applying Graph Theory and Network Science"><meta name="msapplication-task" content="name=Subscribe;action-uri=http://thinkaurelius.com/feed/;icon-uri=http://1.gravatar.com/blavatar/d863226182042db0eeff7030a8842b06?s=16"><meta name="msapplication-task" content="name=Sign up for a free blog;action-uri=http://wordpress.com/signup/;icon-uri=http://s2.wp.com/i/favicon.ico"><meta name="msapplication-task" content="name=WordPress.com Support;action-uri=http://support.wordpress.com/;icon-uri=http://s2.wp.com/i/favicon.ico"><meta name="msapplication-task" content="name=WordPress.com Forums;action-uri=http://forums.wordpress.com/;icon-uri=http://s2.wp.com/i/favicon.ico"><meta name="title" content="Titan Server: From a Single Server to a Highly Available Cluster | Aurelius on WordPress.com">
+<meta name="description" content="Applying Graph Theory and Network Science">
+<style type="text/css" id="custom-colors-css">
+body { background-color: #F0F0F0;}
+a:hover { color: #DB0A0A;}
+#content h2 a:hover { color: #DB0A0A;}
+a, a:visited { color: #BE3535;}
+#content h2 a, #content h2 a:visited { color: #333333;}
+</style>
+		<style type="text/css">
+			#header {
+				background: transparent url(http://thinkaurelius.files.wordpress.com/2012/06/cropped-aurelius-title.png) no-repeat;
+				border: none;
+			}
+		</style>
+		<style type="text/css">
+			.header-left {
+				padding: 0;
+				width: auto;
+			}
+			#header h1,
+			#header h4 {
+				text-indent: -9000px;
+				margin: 0;
+				padding: 0;
+			}
+			#header h1 a,
+			#header h4 a {
+				display: block;
+				margin: 0;
+				width: 960px;
+				height: 80px;
+			}
+			p#description {
+				display: none;
+			}
+		</style>
+<style type="text/css" id="custom-background-css">
+body.custom-background { background-color: #F0F0F0; }
+</style>
+
+<script type="text/javascript">/*<![CDATA[*/if(typeof(addLoadEvent)!='undefined'){addLoadEvent(function(){if(top==self){i=document.createElement('img');i.src='http://botd2.wordpress.com/botd.gif?blog=30995991&post=3863&lang=en&date=1364687473&ip=63.246.231.57&url=http://thinkaurelius.com/2013/03/30/titan-server-from-a-single-server-to-a-highly-available-cluster/';i.style.width='0px';i.style.height='0px';i.style.overflow='hidden';document.body.appendChild(i);}});}/*]]>*/</script>
+<link rel="stylesheet" type="text/css" href="./Titan Server  From a Single Server to a Highly Available Cluster   Aurelius_files/shCore.css"><link rel="stylesheet" type="text/css" href="./Titan Server  From a Single Server to a Highly Available Cluster   Aurelius_files/shThemeDefault.css"><style id="syntaxhighlighteranchor"></style>
+		<link rel="stylesheet" id="custom-css-css" type="text/css" href="./Titan Server  From a Single Server to a Highly Available Cluster   Aurelius_files/saved_resource(2).css">
+		<link rel="stylesheet" type="text/css" id="gravatar-card-css" href="./Titan Server  From a Single Server to a Highly Available Cluster   Aurelius_files/hovercard.css"><link rel="stylesheet" type="text/css" id="gravatar-card-services-css" href="./Titan Server  From a Single Server to a Highly Available Cluster   Aurelius_files/services.css"><link type="text/css" rel="stylesheet" href="chrome-extension://cpngackimfmofbokmjmljamhdncknpmg/style.css"><script type="text/javascript" charset="utf-8" src="chrome-extension://cpngackimfmofbokmjmljamhdncknpmg/page_context.js"></script><script>window["_GOOG_TRANS_EXT_VER"] = "1";</script></head>
+
+<body class="single single-post postid-3863 single-format-standard custom-background typekit-enabled highlander-enabled highlander-light custom-colors hasGoogleVoiceExt" screen_capture_injected="true">
+
+<div id="header">
+	<div class="header-left">
+					<h4><a href="http://thinkaurelius.com/">Aurelius</a></h4>
+				<p id="description">Applying Graph Theory and Network Science</p>
+	</div>
+	<div class="header-right">
+		<form method="get" id="searchform" action="http://thinkaurelius.com/">
+			<div><label class="hidden" for="s">Search:</label>
+			<input type="text" value="" name="s" id="s">
+			<input type="submit" id="searchsubmit" value="Go"></div>
+		</form>
+	</div>
+</div>
+<div id="access">
+	<div id="nav">
+		<div id="supernav" class="navleft nav">
+			<div class="menu"><ul><li><a href="http://thinkaurelius.com/" title="Home">Home</a></li><li class="page_item page-item-707 current_page_parent"><a href="http://thinkaurelius.com/blog/">Blog</a></li><li class="page_item page-item-1694"><a href="http://thinkaurelius.com/subscription/">Subscription</a></li><li class="page_item page-item-34"><a href="http://thinkaurelius.com/services/">Services</a></li><li class="page_item page-item-3744"><a href="http://thinkaurelius.com/affiliations/">Affiliations</a></li><li class="page_item page-item-36"><a href="http://thinkaurelius.com/team/">Team</a></li><li class="page_item page-item-1914"><a href="http://thinkaurelius.com/news/">News</a></li></ul></div>
+		</div>
+		<div class="navright">
+			<a class="rsslink" rel="nofollow" href="http://thinkaurelius.com/feed/">Posts</a>
+			<a class="rsslink" rel="nofollow" href="http://thinkaurelius.com/comments/feed/">Comments</a>
+		</div>
+	</div>
+
+	<div id="subnav" class="subnav nav">
+			</div>
+</div>
+
+<div id="wrap">
+<div id="content">
+
+	<div id="content-left">
+
+		
+			<div id="nav-above">
+				<div class="nav-previous"><a href="http://thinkaurelius.com/2013/02/04/polyglot-persistence-and-query-with-gremlin/" rel="prev"><span class="meta-nav">←</span> Polyglot Persistence and Query with&nbsp;Gremlin</a></div>
+				<div class="nav-next"></div>
+			</div>
+
+			<div class="post-3863 post type-post status-publish format-standard hentry category-blog">
+
+				<div class="entry">
+
+					<h1>Titan Server: From a Single Server to a Highly Available&nbsp;Cluster</h1>
+
+					<div class="post-info">
+						<p>
+							<span class="time">March 30, 2013</span>
+															<span class="author">by <a href="http://thinkaurelius.com/author/okrammarko/" title="Posts by Marko A. Rodriguez" rel="author">Marko A. Rodriguez</a></span>
+																						<span class="post-comments"><a href="http://thinkaurelius.com/2013/03/30/titan-server-from-a-single-server-to-a-highly-available-cluster/#comments" title="Comment on Titan Server: From a Single Server to a Highly Available Cluster">1 Comment</a></span></p>
+				<div class="social" style="padding-top: 13px; width: 100%;">
+				  <div class="sharedaddy"> 
+				    <div class="sd-content" style="float: left;">
+				      <ul>
+					<li><div class="g-plusone" data-size="medium"></div></li>
+					<li><a href="https://twitter.com/share"
+					       class="twitter-share-button"
+					       data-related="aureliusgraphs,twarko,MBroecheler,spmallette"
+					       data-hashtags="bigdata">Tweet</a></li>
+					<li><div class="fb-like" data-send="false" data-layout="button_count" data-width="450" data-show-faces="false"></div></li>
+				      </ul>
+				    </div><!-- end sd-conent-->
+				    <div class="clear"></div>
+				  </div><!-- end sharedaddy -->
+				</div><!-- end social -->
+
+					</div><!-- end post info -->
+
+					<p><a href="http://thinkaurelius.github.com/titan/"><img src="./Titan Server  From a Single Server to a Highly Available Cluster   Aurelius_files/titan-single-ha-clustered-splash.png" alt="Titan Growth" width="400" class="alignleft"></a> <a href="http://thinkaurelius.github.com/titan/">Titan</a> is a distributed <a href="http://en.wikipedia.org/wiki/Graph_database">graph database</a> capable of storing graphs on the order of hundreds of billions of edges while, at the same time, supporting billions of real-time graph traversals a day. For most graph applications, the high-end performance aspects of Titan will never be reached. This does not mean that Titan is unsuitable for graph applications at the smaller scale — in the billions of edges and below. The purpose of this post is to introduce Titan from the perspective of a team of engineers developing a new graph-based application. These engineers will initially develop and test their codebase using a single <a href="https://github.com/thinkaurelius/titan/wiki/Titan-Server">Titan Server</a>. When the application matures and is ready for production use, a <a href="http://en.wikipedia.org/wiki/High-availability_cluster">highly-available</a> setup is deployed. Finally, as the application becomes more popular and the data size and transactional load increases, a <a href="http://en.wikipedia.org/wiki/Distributed_database">fully distributed cluster</a> is leveraged. Growing a Titan database from a single server to a cluster is simply a matter of configuration. In this way, Titan <a href="http://en.wikipedia.org/wiki/Elastic_computing">gracefully scales</a> to accommodate the changing requirements of a graph application.</p>
+<h2>Titan Single Server</h2>
+<p><img src="./Titan Server  From a Single Server to a Highly Available Cluster   Aurelius_files/titan-single-machine.png" alt="Titan Single Machine" width="110" class="alignleft"><a href="http://en.wikipedia.org/wiki/Augustus">Augustus</a> and <a href="http://en.wikipedia.org/wiki/Tiberius">Tiberius</a> are two software engineers who have designed an application that represents the <a href="http://en.wikipedia.org/wiki/List_of_Roman_deities">Gods</a> and people of Rome within a graph of familial relationships — a <a href="http://en.wikipedia.org/wiki/Genealogy">genealogy</a> application. The intention is that Roman scholars will use the application to better understand the social fabric of their great Empire. While the intention is single-user, the two engineers decide to leverage <a href="http://thinkaurelius.github.com/titan/">Titan</a> as the backend graph database. For one, Titan is completely free for any use (<a href="http://en.wikipedia.org/wiki/Apache_License">Apache 2 licensed</a>) and two, it supports both single server and distributed deployments. The latter is important to them because the Greek <a href="http://en.wikipedia.org/wiki/Pythia">Oracle of Delphi</a> foretold that a genealogy graph would one day be used online by everyone throughout the <a href="http://en.wikipedia.org/wiki/Roman_Empire">Roman Empire</a>.</p>
+<div><div id="highlighter_524239" class="syntaxhighlighter  plain"><table border="0" cellpadding="0" cellspacing="0"><tbody><tr><td class="gutter"><div class="line number1 index0 alt2">1</div><div class="line number2 index1 alt1">2</div><div class="line number3 index2 alt2">3</div><div class="line number4 index3 alt1">4</div><div class="line number5 index4 alt2">5</div><div class="line number6 index5 alt1">6</div><div class="line number7 index6 alt2">7</div><div class="line number8 index7 alt1">8</div><div class="line number9 index8 alt2">9</div><div class="line number10 index9 alt1">10</div><div class="line number11 index10 alt2">11</div><div class="line number12 index11 alt1">12</div><div class="line number13 index12 alt2">13</div></td><td class="code"><div class="container"><div class="line number1 index0 alt2"><code class="plain plain">$ wget <a href="http://s3.thinkaurelius.com/downloads/titan/titan-cassandra-0.3.0.zip">http://s3.thinkaurelius.com/downloads/titan/titan-cassandra-0.3.0.zip</a></code></div><div class="line number2 index1 alt1"><code class="plain plain">$ unzip titan-cassandra-0.3.0.zip</code></div><div class="line number3 index2 alt2"><code class="plain plain">$ cd titan-cassandra-0.3.0</code></div><div class="line number4 index3 alt1"><code class="plain plain">$ sudo bin/titan.sh config/titan-server-rexster.xml config/titan-server-cassandra.properties</code></div><div class="line number5 index4 alt2"><code class="plain plain">13/03/27 12:40:32 INFO service.CassandraDaemon: JVM vendor/version: Java HotSpot(TM) 64-Bit Server VM/1.7.0_12-ea</code></div><div class="line number6 index5 alt1"><code class="plain plain">13/03/27 12:40:32 INFO service.CassandraDaemon: Heap size: 40566784/477233152</code></div><div class="line number7 index6 alt2"><code class="plain plain">13/03/27 12:40:32 INFO config.DatabaseDescriptor: Loading settings from file:/Users/marko/software/aurelius/titan/config/cassandra.yaml</code></div><div class="line number8 index7 alt1"><code class="plain plain">13/03/27 12:40:32 INFO config.DatabaseDescriptor: Global memtable threshold is enabled at 151MB</code></div><div class="line number9 index8 alt2"><code class="plain plain">13/03/27 12:40:32 INFO service.CacheService: Initializing key cache with capacity of 2 MBs.</code></div><div class="line number10 index9 alt1"><code class="plain plain">13/03/27 12:40:35 INFO server.RexProRexsterServer: RexPro serving on port: [8184]</code></div><div class="line number11 index10 alt2"><code class="plain plain">13/03/27 12:40:35 INFO server.HttpRexsterServer: Rexster Server running on: [<a href="http://localhost:8182/">http://localhost:8182</a>]</code></div><div class="line number12 index11 alt1"><code class="plain plain">13/03/27 12:40:35 INFO server.ShutdownManager: Bound shutdown socket to /127.0.0.1:8183. Starting listener thread for shutdown requests.</code></div><div class="line number13 index12 alt2"><code class="plain plain">...</code></div></div></td></tr></tbody></table></div></div>
+<blockquote><p>Users without <code>wget</code> can use <code>curl -O</code> or download from the Titan <a href="https://github.com/thinkaurelius/titan/wiki/Downloads">download page</a>.
+</p></blockquote>
+<p>The above sequence of 4 shell commands downloads and starts up a <a href="https://github.com/thinkaurelius/titan/wiki/Titan-Server">Titan Server</a> on the <code>localhost</code>. Titan Server embeds both <a href="http://cassandra.apache.org/">Cassandra</a> and (a lightweight version of) <a href="http://rexster.tinkerpop.com/">Rexster</a> within the same <a href="http://en.wikipedia.org/wiki/Java_virtual_machine">JVM</a>. Titan Server exposes the following language-agnostic endpoints for developers to communicate with the graph:</p>
+<ol>
+<li>A <a href="https://github.com/tinkerpop/rexster/wiki/Basic-REST-API">RESTful</a> endpoint available at <code><a href="http://localhost:8182/graphs">http://localhost:8182/graphs</a></code>.
+<ul>
+<li><a href="http://en.wikipedia.org/wiki/Create,_read,_update_and_delete">CRUD</a> operations can be enacted via <a href="http://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol">HTTP</a> and <a href="http://www.json.org/">JSON</a>.</li>
+</ul>
+</li>
+<li>A <a href="https://github.com/tinkerpop/rexster/wiki/RexPro">RexPro binary protocol</a> endpoint available on port <code>8184</code>.
+<ul>
+<li>Arbitrarily complex <a href="http://gremlin.tinkerpop.com/">Gremlin</a> read/write operations can be enacted via <a href="http://msgpack.org/">MessagePack</a>.</li>
+</ul>
+</li>
+</ol>
+<p><img src="./Titan Server  From a Single Server to a Highly Available Cluster   Aurelius_files/titan-http-rexpro.png" alt="Titan HTTP/RexPro" width="600" class="aligncenter"></p>
+<p>Titan Server is configured via two primary files: <code>titan-server-rexster.xml</code> (shown below) and <code>cassandra.yaml</code> (discussed in the next section). These files are located in the <code>config/</code> directory of the <code>titan-cassandra-x.y.z</code> distribution.</p>
+<div><div id="highlighter_736057" class="syntaxhighlighter  xml"><table border="0" cellpadding="0" cellspacing="0"><tbody><tr><td class="gutter"><div class="line number1 index0 alt2">1</div><div class="line number2 index1 alt1">2</div><div class="line number3 index2 alt2">3</div><div class="line number4 index3 alt1">4</div><div class="line number5 index4 alt2">5</div><div class="line number6 index5 alt1">6</div><div class="line number7 index6 alt2">7</div><div class="line number8 index7 alt1">8</div><div class="line number9 index8 alt2">9</div><div class="line number10 index9 alt1">10</div><div class="line number11 index10 alt2">11</div><div class="line number12 index11 alt1">12</div><div class="line number13 index12 alt2">13</div><div class="line number14 index13 alt1">14</div><div class="line number15 index14 alt2">15</div><div class="line number16 index15 alt1">16</div><div class="line number17 index16 alt2">17</div><div class="line number18 index17 alt1">18</div><div class="line number19 index18 alt2">19</div><div class="line number20 index19 alt1">20</div><div class="line number21 index20 alt2">21</div><div class="line number22 index21 alt1">22</div><div class="line number23 index22 alt2">23</div><div class="line number24 index23 alt1">24</div><div class="line number25 index24 alt2">25</div><div class="line number26 index25 alt1">26</div><div class="line number27 index26 alt2">27</div><div class="line number28 index27 alt1">28</div><div class="line number29 index28 alt2">29</div><div class="line number30 index29 alt1">30</div><div class="line number31 index30 alt2">31</div><div class="line number32 index31 alt1">32</div><div class="line number33 index32 alt2">33</div><div class="line number34 index33 alt1">34</div><div class="line number35 index34 alt2">35</div><div class="line number36 index35 alt1">36</div><div class="line number37 index36 alt2">37</div><div class="line number38 index37 alt1">38</div><div class="line number39 index38 alt2">39</div><div class="line number40 index39 alt1">40</div><div class="line number41 index40 alt2">41</div><div class="line number42 index41 alt1">42</div><div class="line number43 index42 alt2">43</div><div class="line number44 index43 alt1">44</div><div class="line number45 index44 alt2">45</div><div class="line number46 index45 alt1">46</div><div class="line number47 index46 alt2">47</div><div class="line number48 index47 alt1">48</div><div class="line number49 index48 alt2">49</div><div class="line number50 index49 alt1">50</div></td><td class="code"><div class="container"><div class="line number1 index0 alt2"><code class="xml plain">&lt;</code><code class="xml keyword">rexster</code><code class="xml plain">&gt;</code></div><div class="line number2 index1 alt1"><code class="xml spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="xml plain">&lt;</code><code class="xml keyword">http</code><code class="xml plain">&gt;</code></div><div class="line number3 index2 alt2"><code class="xml spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="xml plain">&lt;</code><code class="xml keyword">server-port</code><code class="xml plain">&gt;8182&lt;/</code><code class="xml keyword">server-port</code><code class="xml plain">&gt;</code></div><div class="line number4 index3 alt1"><code class="xml spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="xml plain">&lt;</code><code class="xml keyword">server-host</code><code class="xml plain">&gt;0.0.0.0&lt;/</code><code class="xml keyword">server-host</code><code class="xml plain">&gt;</code></div><div class="line number5 index4 alt2"><code class="xml spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="xml plain">&lt;</code><code class="xml keyword">base-uri</code><code class="xml plain">&gt;<a href="http://localhost/">http://localhost</a>&lt;/</code><code class="xml keyword">base-uri</code><code class="xml plain">&gt;</code></div><div class="line number6 index5 alt1"><code class="xml spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="xml plain">&lt;</code><code class="xml keyword">character-set</code><code class="xml plain">&gt;UTF-8&lt;/</code><code class="xml keyword">character-set</code><code class="xml plain">&gt;</code></div><div class="line number7 index6 alt2"><code class="xml spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="xml plain">&lt;</code><code class="xml keyword">enable-jmx</code><code class="xml plain">&gt;false&lt;/</code><code class="xml keyword">enable-jmx</code><code class="xml plain">&gt;</code></div><div class="line number8 index7 alt1"><code class="xml spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="xml plain">&lt;</code><code class="xml keyword">max-post-size</code><code class="xml plain">&gt;2097152&lt;/</code><code class="xml keyword">max-post-size</code><code class="xml plain">&gt;</code></div><div class="line number9 index8 alt2"><code class="xml spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="xml plain">&lt;</code><code class="xml keyword">max-header-size</code><code class="xml plain">&gt;8192&lt;/</code><code class="xml keyword">max-header-size</code><code class="xml plain">&gt;</code></div><div class="line number10 index9 alt1"><code class="xml spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="xml plain">&lt;</code><code class="xml keyword">upload-timeout-millis</code><code class="xml plain">&gt;30000&lt;/</code><code class="xml keyword">upload-timeout-millis</code><code class="xml plain">&gt;</code></div><div class="line number11 index10 alt2"><code class="xml spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="xml plain">&lt;</code><code class="xml keyword">thread-pool</code><code class="xml plain">&gt;</code></div><div class="line number12 index11 alt1"><code class="xml spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="xml plain">&lt;</code><code class="xml keyword">worker</code><code class="xml plain">&gt;</code></div><div class="line number13 index12 alt2"><code class="xml spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="xml plain">&lt;</code><code class="xml keyword">core-size</code><code class="xml plain">&gt;8&lt;/</code><code class="xml keyword">core-size</code><code class="xml plain">&gt;</code></div><div class="line number14 index13 alt1"><code class="xml spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="xml plain">&lt;</code><code class="xml keyword">max-size</code><code class="xml plain">&gt;8&lt;/</code><code class="xml keyword">max-size</code><code class="xml plain">&gt;</code></div><div class="line number15 index14 alt2"><code class="xml spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="xml plain">&lt;/</code><code class="xml keyword">worker</code><code class="xml plain">&gt;</code></div><div class="line number16 index15 alt1"><code class="xml spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="xml plain">&lt;</code><code class="xml keyword">kernal</code><code class="xml plain">&gt;</code></div><div class="line number17 index16 alt2"><code class="xml spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="xml plain">&lt;</code><code class="xml keyword">core-size</code><code class="xml plain">&gt;4&lt;/</code><code class="xml keyword">core-size</code><code class="xml plain">&gt;</code></div><div class="line number18 index17 alt1"><code class="xml spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="xml plain">&lt;</code><code class="xml keyword">max-size</code><code class="xml plain">&gt;4&lt;/</code><code class="xml keyword">max-size</code><code class="xml plain">&gt;</code></div><div class="line number19 index18 alt2"><code class="xml spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="xml plain">&lt;/</code><code class="xml keyword">kernal</code><code class="xml plain">&gt;</code></div><div class="line number20 index19 alt1"><code class="xml spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="xml plain">&lt;/</code><code class="xml keyword">thread-pool</code><code class="xml plain">&gt;</code></div><div class="line number21 index20 alt2"><code class="xml spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="xml plain">&lt;</code><code class="xml keyword">io-strategy</code><code class="xml plain">&gt;leader-follower&lt;/</code><code class="xml keyword">io-strategy</code><code class="xml plain">&gt;</code></div><div class="line number22 index21 alt1"><code class="xml spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="xml plain">&lt;/</code><code class="xml keyword">http</code><code class="xml plain">&gt;</code></div><div class="line number23 index22 alt2"><code class="xml spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="xml plain">&lt;</code><code class="xml keyword">rexpro</code><code class="xml plain">&gt;</code></div><div class="line number24 index23 alt1"><code class="xml spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="xml plain">&lt;</code><code class="xml keyword">server-port</code><code class="xml plain">&gt;8184&lt;/</code><code class="xml keyword">server-port</code><code class="xml plain">&gt;</code></div><div class="line number25 index24 alt2"><code class="xml spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="xml plain">&lt;</code><code class="xml keyword">server-host</code><code class="xml plain">&gt;0.0.0.0&lt;/</code><code class="xml keyword">server-host</code><code class="xml plain">&gt;</code></div><div class="line number26 index25 alt1"><code class="xml spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="xml plain">&lt;</code><code class="xml keyword">session-max-idle</code><code class="xml plain">&gt;1790000&lt;/</code><code class="xml keyword">session-max-idle</code><code class="xml plain">&gt;</code></div><div class="line number27 index26 alt2"><code class="xml spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="xml plain">&lt;</code><code class="xml keyword">session-check-interval</code><code class="xml plain">&gt;3000000&lt;/</code><code class="xml keyword">session-check-interval</code><code class="xml plain">&gt;</code></div><div class="line number28 index27 alt1"><code class="xml spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="xml plain">&lt;</code><code class="xml keyword">connection-max-idle</code><code class="xml plain">&gt;180000&lt;/</code><code class="xml keyword">connection-max-idle</code><code class="xml plain">&gt;</code></div><div class="line number29 index28 alt2"><code class="xml spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="xml plain">&lt;</code><code class="xml keyword">connection-check-interval</code><code class="xml plain">&gt;3000000&lt;/</code><code class="xml keyword">connection-check-interval</code><code class="xml plain">&gt;</code></div><div class="line number30 index29 alt1"><code class="xml spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="xml plain">&lt;</code><code class="xml keyword">enable-jmx</code><code class="xml plain">&gt;false&lt;/</code><code class="xml keyword">enable-jmx</code><code class="xml plain">&gt;</code></div><div class="line number31 index30 alt2"><code class="xml spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="xml plain">&lt;</code><code class="xml keyword">thread-pool</code><code class="xml plain">&gt;</code></div><div class="line number32 index31 alt1"><code class="xml spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="xml plain">&lt;</code><code class="xml keyword">worker</code><code class="xml plain">&gt;</code></div><div class="line number33 index32 alt2"><code class="xml spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="xml plain">&lt;</code><code class="xml keyword">core-size</code><code class="xml plain">&gt;8&lt;/</code><code class="xml keyword">core-size</code><code class="xml plain">&gt;</code></div><div class="line number34 index33 alt1"><code class="xml spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="xml plain">&lt;</code><code class="xml keyword">max-size</code><code class="xml plain">&gt;8&lt;/</code><code class="xml keyword">max-size</code><code class="xml plain">&gt;</code></div><div class="line number35 index34 alt2"><code class="xml spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="xml plain">&lt;/</code><code class="xml keyword">worker</code><code class="xml plain">&gt;</code></div><div class="line number36 index35 alt1"><code class="xml spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="xml plain">&lt;</code><code class="xml keyword">kernal</code><code class="xml plain">&gt;</code></div><div class="line number37 index36 alt2"><code class="xml spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="xml plain">&lt;</code><code class="xml keyword">core-size</code><code class="xml plain">&gt;4&lt;/</code><code class="xml keyword">core-size</code><code class="xml plain">&gt;</code></div><div class="line number38 index37 alt1"><code class="xml spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="xml plain">&lt;</code><code class="xml keyword">max-size</code><code class="xml plain">&gt;4&lt;/</code><code class="xml keyword">max-size</code><code class="xml plain">&gt;</code></div><div class="line number39 index38 alt2"><code class="xml spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="xml plain">&lt;/</code><code class="xml keyword">kernal</code><code class="xml plain">&gt;</code></div><div class="line number40 index39 alt1"><code class="xml spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="xml plain">&lt;/</code><code class="xml keyword">thread-pool</code><code class="xml plain">&gt;</code></div><div class="line number41 index40 alt2"><code class="xml spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="xml plain">&lt;</code><code class="xml keyword">io-strategy</code><code class="xml plain">&gt;leader-follower&lt;/</code><code class="xml keyword">io-strategy</code><code class="xml plain">&gt;</code></div><div class="line number42 index41 alt1"><code class="xml spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="xml plain">&lt;/</code><code class="xml keyword">rexpro</code><code class="xml plain">&gt;</code></div><div class="line number43 index42 alt2"><code class="xml spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="xml plain">&lt;</code><code class="xml keyword">security</code><code class="xml plain">&gt;</code></div><div class="line number44 index43 alt1"><code class="xml spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="xml plain">&lt;</code><code class="xml keyword">authentication</code><code class="xml plain">&gt;</code></div><div class="line number45 index44 alt2"><code class="xml spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="xml plain">&lt;</code><code class="xml keyword">type</code><code class="xml plain">&gt;none&lt;/</code><code class="xml keyword">type</code><code class="xml plain">&gt;</code></div><div class="line number46 index45 alt1"><code class="xml spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="xml plain">&lt;/</code><code class="xml keyword">authentication</code><code class="xml plain">&gt;</code></div><div class="line number47 index46 alt2"><code class="xml spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="xml plain">&lt;/</code><code class="xml keyword">security</code><code class="xml plain">&gt;</code></div><div class="line number48 index47 alt1"><code class="xml spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="xml plain">&lt;</code><code class="xml keyword">shutdown-port</code><code class="xml plain">&gt;8183&lt;/</code><code class="xml keyword">shutdown-port</code><code class="xml plain">&gt;</code></div><div class="line number49 index48 alt2"><code class="xml spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="xml plain">&lt;</code><code class="xml keyword">shutdown-host</code><code class="xml plain">&gt;127.0.0.1&lt;/</code><code class="xml keyword">shutdown-host</code><code class="xml plain">&gt;</code></div><div class="line number50 index49 alt1"><code class="xml plain">&lt;/</code><code class="xml keyword">rexster</code><code class="xml plain">&gt;</code></div></div></td></tr></tbody></table></div></div>
+<p><strong>NOTE</strong>: Along with the above endpoints, Titan Server also exposes a JVM native serialization interface that can be used by JVM languages. This interface, for example, is the means by which <a href="http://thinkaurelius.github.com/faunus/">Faunus</a>/<a href="http://hadoop.apache.org/">Hadoop</a> interacts with Titan Server for global graph analytics. For more information on this endpoint, see <a href="https://github.com/thinkaurelius/titan/wiki/Using-Cassandra#remote-server-mode">Using Cassandra</a>.</p>
+<h2>Titan Highly Available </h2>
+<p>The genealogy application was showing promise as a single-user system for studying the genetic history of the Roman people and Gods. Due to the positive response, Augustus and Tiberius decide that a multi-user online genealogy service would be a successful product.</p>
+<div><div id="highlighter_644996" class="syntaxhighlighter  groovy"><table border="0" cellpadding="0" cellspacing="0"><tbody><tr><td class="gutter"><div class="line number1 index0 alt2">1</div><div class="line number2 index1 alt1">2</div><div class="line number3 index2 alt2">3</div><div class="line number4 index3 alt1">4</div><div class="line number5 index4 alt2">5</div><div class="line number6 index5 alt1">6</div></td><td class="code"><div class="container"><div class="line number1 index0 alt2"><code class="groovy comments">// how many siblings did jupiter have?</code></div><div class="line number2 index1 alt1"><code class="groovy plain">g.V(</code><code class="groovy string">'name'</code><code class="groovy plain">,</code><code class="groovy string">'jupiter'</code><code class="groovy plain">).out(</code><code class="groovy string">'brother'</code><code class="groovy plain">,</code><code class="groovy string">'sister'</code><code class="groovy plain">).</code><code class="groovy functions">count</code><code class="groovy plain">() </code></div><div class="line number3 index2 alt2"><code class="groovy comments">// who is caesar's grandmother?</code></div><div class="line number4 index3 alt1"><code class="groovy plain">g.V(</code><code class="groovy string">'name'</code><code class="groovy plain">,</code><code class="groovy string">'caesar'</code><code class="groovy plain">).out(</code><code class="groovy string">'mother'</code><code class="groovy plain">).out(</code><code class="groovy string">'mother'</code><code class="groovy plain">).name </code></div><div class="line number5 index4 alt2"><code class="groovy comments">// who are marcus' children's in-laws?</code></div><div class="line number6 index5 alt1"><code class="groovy plain">g.V(</code><code class="groovy string">'name'</code><code class="groovy plain">,</code><code class="groovy string">'marcus'</code><code class="groovy plain">).</code><code class="groovy keyword">in</code><code class="groovy plain">(</code><code class="groovy string">'father'</code><code class="groovy plain">).has(</code><code class="groovy string">'gender'</code><code class="groovy plain">,</code><code class="groovy string">'M'</code><code class="groovy plain">).out(</code><code class="groovy string">'married'</code><code class="groovy plain">).out(</code><code class="groovy string">'father'</code><code class="groovy plain">,</code><code class="groovy string">'mother'</code><code class="groovy plain">).name </code></div></div></td></tr></tbody></table></div></div>
+<p>As it currently stands, the genealogy data set is approximately 1 billion edges. Therefore, it can be stored and processed on a single machine. As a single-user application a single Titan Server suffices. However, with multiple users, it is important that the system is robust and can serve numerous concurrent requests. If the application is only backed by a single server, then if that server goes down, the application is unusable. To ensure 1.) no <a href="http://en.wikipedia.org/wiki/Single_point_of_failure">single point of failure</a> and 2.) support for more <a href="http://en.wikipedia.org/wiki/Database_transaction">transactions</a> per second, Augustus and Tiberius deploy 3 machines each with a Titan Server installed.</p>
+<p><img src="./Titan Server  From a Single Server to a Highly Available Cluster   Aurelius_files/titan-highly-available.png" alt="Titan Highly Available" width="300" class="alignright"> The team updates the default <code>config/cassandra.yaml</code> file of each Titan Server by changing the <code>localhost</code> property value to be the IP address of the machine and adding a seed IP address for discoverability (see <a href="http://wiki.apache.org/cassandra/MultinodeCluster">Multinode Cluster</a>). Next, they start each Titan Server one after the other (<code>titan.sh</code>). To ensure that the servers properly clustered together, they use Cassandra’s <code><a href="http://wiki.apache.org/cassandra/NodeTool">nodetool</a></code>.</p>
+<div><div id="highlighter_380392" class="syntaxhighlighter  plain"><table border="0" cellpadding="0" cellspacing="0"><tbody><tr><td class="gutter"><div class="line number1 index0 alt2">1</div><div class="line number2 index1 alt1">2</div><div class="line number3 index2 alt2">3</div><div class="line number4 index3 alt1">4</div><div class="line number5 index4 alt2">5</div><div class="line number6 index5 alt1">6</div><div class="line number7 index6 alt2">7</div><div class="line number8 index7 alt1">8</div><div class="line number9 index8 alt2">9</div><div class="line number10 index9 alt1">10</div><div class="line number11 index10 alt2">11</div></td><td class="code"><div class="container"><div class="line number1 index0 alt2"><code class="plain plain">apache-cassandra-1.2.3$ bin/nodetool ring</code></div><div class="line number2 index1 alt1">&nbsp;</div><div class="line number3 index2 alt2"><code class="plain plain">Datacenter: datacenter1</code></div><div class="line number4 index3 alt1"><code class="plain plain">==========</code></div><div class="line number5 index4 alt2"><code class="plain plain">Replicas: 1</code></div><div class="line number6 index5 alt1">&nbsp;</div><div class="line number7 index6 alt2"><code class="plain plain">Address&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Rack&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Status State&nbsp;&nbsp; Load&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Owns&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Token</code></div><div class="line number8 index7 alt1"><code class="plain spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="plain plain">57715295010532946864463892271081778854</code></div><div class="line number9 index8 alt2"><code class="plain plain">10.223.14.57&nbsp;&nbsp;&nbsp; rack1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Up&nbsp;&nbsp;&nbsp;&nbsp; Normal&nbsp; 93.06 KB&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 49.28%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 141555886663081320436455748965948652071</code></div><div class="line number10 index9 alt1"><code class="plain plain">10.174.123.131&nbsp; rack1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Up&nbsp;&nbsp;&nbsp;&nbsp; Normal&nbsp; 59.73 KB&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 33.44%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 28311611028231080169766921879398209884</code></div><div class="line number11 index10 alt2"><code class="plain plain">10.196.0.207&nbsp;&nbsp;&nbsp; rack1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Up&nbsp;&nbsp;&nbsp;&nbsp; Normal&nbsp; 9.43 KB&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 17.28%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 57715295010532946864463892271081778854</code></div></div></td></tr></tbody></table></div></div>
+<p>Finally, on one of the servers, the <code><a href="http://wiki.apache.org/cassandra/CassandraCli">cassandra-cli</a></code> tool is used to update the replication factor of the <code>titan</code>-keyspace.</p>
+<div><div id="highlighter_823518" class="syntaxhighlighter  plain"><table border="0" cellpadding="0" cellspacing="0"><tbody><tr><td class="gutter"><div class="line number1 index0 alt2">1</div><div class="line number2 index1 alt1">2</div><div class="line number3 index2 alt2">3</div><div class="line number4 index3 alt1">4</div><div class="line number5 index4 alt2">5</div><div class="line number6 index5 alt1">6</div><div class="line number7 index6 alt2">7</div><div class="line number8 index7 alt1">8</div><div class="line number9 index8 alt2">9</div></td><td class="code"><div class="container"><div class="line number1 index0 alt2"><code class="plain plain">apache-cassandra-1.2.3$ bin/cassandra-cli -h 10.174.123.131</code></div><div class="line number2 index1 alt1">&nbsp;</div><div class="line number3 index2 alt2"><code class="plain plain">[default@unknown] update keyspace titan with strategy_options = {replication_factor:3};</code></div><div class="line number4 index3 alt1"><code class="plain plain">a3b7e1a3-4a88-3769-8c5e-90cda4fec0e1</code></div><div class="line number5 index4 alt2"><code class="plain plain">[default@unknown] show schema titan;</code></div><div class="line number6 index5 alt1"><code class="plain plain">create keyspace titan</code></div><div class="line number7 index6 alt2"><code class="plain spaces">&nbsp;&nbsp;</code><code class="plain plain">with placement_strategy = 'SimpleStrategy'</code></div><div class="line number8 index7 alt1"><code class="plain spaces">&nbsp;&nbsp;</code><code class="plain plain">and strategy_options = {replication_factor : 3}</code></div><div class="line number9 index8 alt2"><code class="plain spaces">&nbsp;&nbsp;</code><code class="plain plain">and durable_writes = true;</code></div></div></td></tr></tbody></table></div></div>
+<p><img src="./Titan Server  From a Single Server to a Highly Available Cluster   Aurelius_files/roman-room.png" alt="Roman Server Room" width="310" class="alignright"> With a <a href="http://wiki.apache.org/cassandra/Operations#Replication">replication factor</a> of 3, each of the 3 Titan Servers are the primary host of approximately one-third of the vertices in the graph while, at the same time, each maintains a replica of the primary data of the other two servers. In this way, a highly-available, <a href="http://en.wikipedia.org/wiki/Multi-master_replication">master-master</a> setup is rendered. With this model, there is no single point of failure. If one of the database machines goes down, the other two are able to serve the primary data of the dead machine. If two of the machines go down, the remaining machine can serve data — albeit not with the same throughput possible when all three machines are available. With full master-master replication, the graph is duplicated and each server can support both reads and writes to the graph.</p>
+<h2>Titan Clustered</h2>
+<p><img src="./Titan Server  From a Single Server to a Highly Available Cluster   Aurelius_files/roman-forum.png" alt="Roman Forum" width="265" class="alignleft"> The following summer, the prophecy of the Oracle of Delphi comes true. An announcement is made in the <a href="http://en.wikipedia.org/wiki/Roman_Forum">Roman forum</a> about the utility of the online genealogy application. Immediately, the plebeians of Rome join the site. They feverishly add their family histories and traverse the graph to learn more about their genetic past. This spike in usage puts an excessive amount of strain on the servers. With so many concurrent users, the three server machines have their <a href="http://en.wikipedia.org/wiki/CPU_time">CPU</a> and <a href="http://www.nathanaeljones.com/blog/2009/performance-killer-disk-io">disk I/O</a> peaked trying to process requests.</p>
+<p><img src="./Titan Server  From a Single Server to a Highly Available Cluster   Aurelius_files/titan-clustered.png" alt="Titan Clustered" width="300" class="alignright"> To remedy the situation, 6 more Titan Server machines are added to the cluster for a total of 9 machines. The <a href="http://wiki.apache.org/cassandra/Operations#Ring_management">token ring</a> is <a href="http://wiki.apache.org/cassandra/Operations#Load_balancing">rebalanced</a> to ensure that each server maintains a relatively equal amount of the graph. A perfect/fair partition of <code>2^128</code> into 9 parts is below (see <a href="http://blog.milford.io/cassandra-token-calculator/">token ring calculator</a>).</p>
+<div><div id="highlighter_712661" class="syntaxhighlighter  plain"><table border="0" cellpadding="0" cellspacing="0"><tbody><tr><td class="gutter"><div class="line number1 index0 alt2">1</div><div class="line number2 index1 alt1">2</div><div class="line number3 index2 alt2">3</div><div class="line number4 index3 alt1">4</div><div class="line number5 index4 alt2">5</div><div class="line number6 index5 alt1">6</div><div class="line number7 index6 alt2">7</div><div class="line number8 index7 alt1">8</div><div class="line number9 index8 alt2">9</div></td><td class="code"><div class="container"><div class="line number1 index0 alt2"><code class="plain plain">0</code></div><div class="line number2 index1 alt1"><code class="plain plain">18904575940052135809661593108510408704</code></div><div class="line number3 index2 alt2"><code class="plain plain">37809151880104271619323186217020817408</code></div><div class="line number4 index3 alt1"><code class="plain plain">56713727820156407428984779325531226112</code></div><div class="line number5 index4 alt2"><code class="plain plain">75618303760208543238646372434041634816</code></div><div class="line number6 index5 alt1"><code class="plain plain">94522879700260688493040931281842470912</code></div><div class="line number7 index6 alt2"><code class="plain plain">113427455640312814857969558651062452224</code></div><div class="line number8 index7 alt1"><code class="plain plain">132332031580364960112364117498863288320</code></div><div class="line number9 index8 alt2"><code class="plain plain">151236607520417086477292744868083269632</code></div></div></td></tr></tbody></table></div></div>
+<p>Each machine has its token updated using the following <code>nodetool</code> command. By repartitioning the token ring, the 3 original servers transfer their data to the newly on-boarded servers in order to distributed the data load as specified by their location in the 128-bit token space (each vertex <a href="http://en.wikipedia.org/wiki/Hash_function">hashes</a> to a particular 128-bit token).</p>
+<div><div id="highlighter_942940" class="syntaxhighlighter  plain"><table border="0" cellpadding="0" cellspacing="0"><tbody><tr><td class="gutter"><div class="line number1 index0 alt2">1</div><div class="line number2 index1 alt1">2</div><div class="line number3 index2 alt2">3</div><div class="line number4 index3 alt1">4</div><div class="line number5 index4 alt2">5</div><div class="line number6 index5 alt1">6</div></td><td class="code"><div class="container"><div class="line number1 index0 alt2"><code class="plain plain">apache-cassandra-1.2.3$ bin/nodetool -h 10.223.14.57 move 0</code></div><div class="line number2 index1 alt1"><code class="plain plain">apache-cassandra-1.2.3$ bin/nodetool -h 10.174.123.131 move 18904575940052135809661593108510408704</code></div><div class="line number3 index2 alt2"><code class="plain plain">apache-cassandra-1.2.3$ bin/nodetool -h 10.196.0.207 move 37809151880104271619323186217020817408</code></div><div class="line number4 index3 alt1"><code class="plain plain">...</code></div><div class="line number5 index4 alt2"><code class="plain plain">..</code></div><div class="line number6 index5 alt1"><code class="plain plain">.</code></div></div></td></tr></tbody></table></div></div>
+<p><img src="./Titan Server  From a Single Server to a Highly Available Cluster   Aurelius_files/titan-full-architecture.png" alt="Token Ring Partition" width="420" class="aligncenter"></p>
+<p>With the replication factor still set to 3, each server does not maintain a full replica of the graph. Instead, each server only replicates a third of the full graph (3/9). At this point, no single server has a full picture of the graph. However, because there are more servers, more transactions can be served and more data can be stored. Augustus and Tiberius have successfully grown their single-user graph application to a distributed system that stores and processes a massive genealogy graph represented across a cluster of Titan Server machines.</p>
+<h2>Conclusion</h2>
+<p><img src="./Titan Server  From a Single Server to a Highly Available Cluster   Aurelius_files/titan-head.png" alt="Titan Head" width="70" class="alignleft"> <a href="http://thinkaurelius.github.com/titan/">Titan</a> was developed from the outset to support <a href="http://en.wikipedia.org/wiki/Online_transaction_processing">OLTP</a> distributed graph storage and processing. While it is important that a graph database can scale indefinitely, less than 1% of applications written today will ever leverage near trillion edge graphs. The other 99% of applications will store and process million and billion edge graphs. Titan is able to meet the requirements of both segments of the graph application space. Furthermore, Titan scales gracefully as developers move from a single server prototype, to a highly-available production system, to ultimately, a fully distributed cluster sustaining the size and workload requirements seen by 1% of applications.</p>
+<h2>Acknowledgements</h2>
+<p><a href="http://stephen.genoprime.com/">Stephen Mallette</a> and <a href="https://github.com/bdeggleston">Blake Eggleston</a> are the developers of Rexster’s <a href="https://github.com/tinkerpop/rexster/wiki/RexPro">RexPro</a>. Their efforts were a driving force behind the development of <a href="https://github.com/thinkaurelius/titan/wiki/Titan-Server">Titan Server</a>.</p>
+<h2>Authors</h2>
+<p><a href="http://thinkaurelius.com/team/"><br>
+<img title="Marko A. Rodriguez" src="./Titan Server  From a Single Server to a Highly Available Cluster   Aurelius_files/marko-headshot.png" alt="Marko A. Rodriguez"> <img src="./Titan Server  From a Single Server to a Highly Available Cluster   Aurelius_files/matthias-headshot1.png" alt="Matthias Broecheler" title="Matthias Broecheler"></a></p>
+
+<div class="social">
+  <div class="sharedaddy"> 
+    <h3 class="sd-title">Share this:</h3>
+    <div class="sd-content">
+      <ul>
+	<li><div class="g-plusone" data-size="medium"></div></li>
+	<li><a href="https://twitter.com/share"
+	   class="twitter-share-button"
+	   data-related="aureliusgraphs,twarko,MBroecheler,spmallette"
+	   data-hashtags="bigdata">Tweet</a></li>
+	<li><div class="fb-like" data-send="false" data-layout="button_count" data-width="450" data-show-faces="false"></div></li>
+      </ul>
+      </div><!-- end sd-conent-->
+    <div class="clear"></div>
+  </div><!-- end sharedaddy -->
+</div><!-- end social -->
+
+
+
+<div id="jp-post-flair" class="sharedaddy sd-like-enabled sd-sharing-enabled"><div class="sharedaddy sd-sharing-enabled"><div class="robots-nocontent sd-block sd-social sd-social-icon-text sd-sharing"><h3 class="sd-title">Share this:</h3><div class="sd-content"><ul><li class="share-twitter"><a rel="nofollow" class="share-twitter sd-button share-icon" href="http://thinkaurelius.com/2013/03/30/titan-server-from-a-single-server-to-a-highly-available-cluster/?share=twitter&nb=1" title="Click to share on Twitter" id="sharing-twitter-3863"><span>Twitter<span class="share-count">7</span></span></a></li><li class="share-facebook"><a rel="nofollow" class="share-facebook sd-button share-icon" href="http://thinkaurelius.com/2013/03/30/titan-server-from-a-single-server-to-a-highly-available-cluster/?share=facebook&nb=1" title="Share on Facebook" id="sharing-facebook-3863"><span>Facebook</span></a></li><li class="share-end"></li></ul><div class="sharing-clear"></div></div></div></div><div class="sharedaddy sd-block sd-like jetpack-likes-widget-wrapper jetpack-likes-widget-loaded" id="like-post-wrapper-30995991-3863" data-src="http://widgets.wp.com/likes/#blog_id=30995991&amp;post_id=3863&amp;origin=http://thinkaurelius.wordpress.com" data-name="like-post-frame-30995991-3863"><h3 class="sd-title">Like this:</h3><div class="post-likes-widget-placeholder" style="height: 55px; display: none;"><span class="button"><span>Like</span></span> <span class="loading">Loading...</span></div><iframe class="post-likes-widget jetpack-likes-widget" name="like-post-frame-30995991-3863" height="55px" width="100%" frameborder="0" src="./Titan Server  From a Single Server to a Highly Available Cluster   Aurelius_files/saved_resource.html" style="display: inline;"></iframe><span class="sd-text-color"></span><a class="sd-link-color"></a></div></div><div class="clear"></div>
+					
+					<!--
+					<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+			xmlns:dc="http://purl.org/dc/elements/1.1/"
+			xmlns:trackback="http://madskills.com/public/xml/rss/module/trackback/">
+		<rdf:Description rdf:about="http://thinkaurelius.com/2013/03/30/titan-server-from-a-single-server-to-a-highly-available-cluster/"
+    dc:identifier="http://thinkaurelius.com/2013/03/30/titan-server-from-a-single-server-to-a-highly-available-cluster/"
+    dc:title="Titan Server: From a Single Server to a Highly Available&nbsp;Cluster"
+    trackback:ping="http://thinkaurelius.com/2013/03/30/titan-server-from-a-single-server-to-a-highly-available-cluster/trackback/" />
+</rdf:RDF>					-->
+
+				</div>
+
+				<div class="post-meta">
+					<p>
+						<span class="categories">Filed under <a href="http://thinkaurelius.com/category/blog/" title="View all posts in Blog" rel="category tag">Blog</a></span>
+											</p>
+				</div>
+
+			</div>
+
+			
+						<p></p>
+
+			<div id="comments">
+	
+
+	<h3 id="comments-title">One Response to <em>Titan Server: From a Single Server to a Highly Available&nbsp;Cluster</em>	</h3>
+
+	<ol class="commentlist snap_preview">
+				<li class="comment even thread-even depth-1 highlander-comment" id="li-comment-374">
+		<div id="comment-374">
+		<div class="comment-author vcard">
+			<img alt="" src="./Titan Server  From a Single Server to a Highly Available Cluster   Aurelius_files/f871ec1a729a1478908fd2e8deb2510e" class="avatar avatar-40 grav-hashed grav-hijack" height="40" width="40" id="grav-f871ec1a729a1478908fd2e8deb2510e-0">			<cite class="fn"><a href="http://primsly.com/" rel="external nofollow" class="url">Nima Rahnemoon</a></cite> <span class="says">says:</span>		</div>
+		
+		<div class="comment-meta commentmetadata"><a href="http://thinkaurelius.com/2013/03/30/titan-server-from-a-single-server-to-a-highly-available-cluster/#comment-374">April 1, 2013 at 4:41 pm</a></div>
+
+		<div class="comment-body"><p>Interesting post.  It’d also be interesting to see how Titan compares to Twitter’s FlockDB.</p>
+</div>
+
+		<div class="reply">
+			<a class="comment-reply-link" href="http://thinkaurelius.com/2013/03/30/titan-server-from-a-single-server-to-a-highly-available-cluster/?replytocom=374#respond" onclick="return addComment.moveForm(&quot;comment-374&quot;, &quot;374&quot;, &quot;respond&quot;, &quot;3863&quot;)">Reply</a>		</div>
+	</div>
+
+	</li>
+	</ol>
+
+
+								<div id="respond" class="js">
+				<h3 id="reply-title">Leave a Reply <small><a rel="nofollow" id="cancel-comment-reply-link" href="http://thinkaurelius.com/2013/03/30/titan-server-from-a-single-server-to-a-highly-available-cluster/#respond" style="display:none;">Cancel reply</a></small></h3>
+									<form action="http://thinkaurelius.com/wp-comments-post.php" method="post" id="commentform">
+																										
+
+
+												
+<input type="hidden" name="hc_post_as" id="hc_post_as" value="guest">
+
+<div class="comment-form-field comment-textarea">
+	
+	<div id="comment-form-comment"><textarea placeholder="Enter your comment here..." style="height: 36px; resize: none; overflow-y: hidden; position: absolute; top: 0px; left: -9999px; width: 608px; line-height: normal; text-decoration: none; letter-spacing: 0px;" tabindex="-1"></textarea><textarea id="comment" name="comment" placeholder="Enter your comment here..." style="height: 36px; resize: none; overflow-y: hidden;"></textarea></div>
+</div>
+
+<div id="comment-form-identity" style="display: none;">
+
+	<div id="comment-form-nascar">
+		<p>Fill in your details below or click an icon to log in:</p>
+		<ul>
+			<li class="selected" style="display:none;">
+				<a href="http://thinkaurelius.com/2013/03/30/titan-server-from-a-single-server-to-a-highly-available-cluster/#comment-form-guest" id="postas-guest" title="Guest">
+					<span></span>
+				</a>
+			</li>
+			<li>
+				<a href="http://thinkaurelius.com/2013/03/30/titan-server-from-a-single-server-to-a-highly-available-cluster/#comment-form-load-service:WordPress.com" id="postas-wordpress" title="WordPress.com">
+					<span></span>
+				</a>
+			</li>
+			<li>
+				<a href="http://thinkaurelius.com/2013/03/30/titan-server-from-a-single-server-to-a-highly-available-cluster/#comment-form-load-service:Twitter" id="postas-twitter" title="Twitter">
+					<span></span>
+				</a>
+			</li>
+			<li>
+				<a href="http://thinkaurelius.com/2013/03/30/titan-server-from-a-single-server-to-a-highly-available-cluster/#comment-form-load-service:Facebook" id="postas-facebook" title="Facebook">
+					<span></span>
+				</a>
+			</li>
+		</ul>
+	</div>
+
+	<div id="comment-form-guest" class="comment-form-service selected">
+		<div class="comment-form-padder">
+			<div class="comment-form-avatar">
+<a href="https://gravatar.com/site/signup/" target="_blank">				<img src="./Titan Server  From a Single Server to a Highly Available Cluster   Aurelius_files/ad516503a11cd5ca435acc9bb6523536" alt="Gravatar" width="25" class="no-grav">
+</a>			</div>
+
+				<div class="comment-form-fields">
+				<div class="comment-form-field comment-form-email">
+					<label for="email">Email <span class="required">(required)</span> <span class="nopublish">(Address never made public)</span></label>
+					<div class="comment-form-input"><input id="email" name="email" type="email" value=""></div>
+				</div>
+				<div class="comment-form-field comment-form-author">
+					<label for="author">Name <span class="required">(required)</span></label>
+					<div class="comment-form-input"><input id="author" name="author" type="text" value=""></div>
+				</div>
+				<div class="comment-form-field comment-form-url">
+					<label for="url">Website</label>
+					<div class="comment-form-input"><input id="url" name="url" type="text" value=""></div>
+				</div> 
+			</div>
+	
+		</div>
+	</div>
+
+	<div id="comment-form-wordpress" class="comment-form-service">
+		<div class="comment-form-padder">
+			<div class="comment-form-avatar">
+				<img src="./Titan Server  From a Single Server to a Highly Available Cluster   Aurelius_files/wplogo.png" alt="WordPress.com Logo" width="25" class="no-grav">
+			</div>
+
+				<div class="comment-form-fields">
+				<input type="hidden" name="wp_avatar" id="wordpress-avatar" class="comment-meta-wordpress" value="">
+				<input type="hidden" name="wp_user_id" id="wordpress-user_id" class="comment-meta-wordpress" value="">
+				<input type="hidden" name="wp_access_token" id="wordpress-access_token" class="comment-meta-wordpress" value="">
+				<p class="comment-form-posting-as pa-wordpress"><strong></strong> You are commenting using your WordPress.com account. <span class="comment-form-log-out">(&nbsp;<a href="javascript:HighlanderComments.doExternalLogout( 'wordpress' );">Log&nbsp;Out</a>&nbsp;/&nbsp;<a href="http://thinkaurelius.com/2013/03/30/titan-server-from-a-single-server-to-a-highly-available-cluster/#" onclick="javascript:HighlanderComments.switchAccount();return false;">Change</a>&nbsp;)</span></p>
+			</div>
+	
+		</div>
+	</div>
+
+	<div id="comment-form-twitter" class="comment-form-service">
+		<div class="comment-form-padder">
+			<div class="comment-form-avatar">
+				<img src="./Titan Server  From a Single Server to a Highly Available Cluster   Aurelius_files/ad516503a11cd5ca435acc9bb6523536" alt="Twitter picture" width="25" class="no-grav">
+			</div>
+
+				<div class="comment-form-fields">
+				<input type="hidden" name="twitter_avatar" id="twitter-avatar" class="comment-meta-twitter" value="">
+				<input type="hidden" name="twitter_user_id" id="twitter-user_id" class="comment-meta-twitter" value="">
+				<input type="hidden" name="twitter_access_token" id="twitter-access_token" class="comment-meta-twitter" value="">
+				<p class="comment-form-posting-as pa-twitter"><strong></strong> You are commenting using your Twitter account. <span class="comment-form-log-out">(&nbsp;<a href="javascript:HighlanderComments.doExternalLogout( 'twitter' );">Log&nbsp;Out</a>&nbsp;/&nbsp;<a href="http://thinkaurelius.com/2013/03/30/titan-server-from-a-single-server-to-a-highly-available-cluster/#" onclick="javascript:HighlanderComments.switchAccount();return false;">Change</a>&nbsp;)</span></p>
+			</div>
+	
+		</div>
+	</div>
+
+	<div id="comment-form-facebook" class="comment-form-service">
+		<div class="comment-form-padder">
+			<div class="comment-form-avatar">
+				<img src="./Titan Server  From a Single Server to a Highly Available Cluster   Aurelius_files/ad516503a11cd5ca435acc9bb6523536" alt="Facebook photo" width="25" class="no-grav">
+			</div>
+
+				<div class="comment-form-fields">
+				<input type="hidden" name="fb_avatar" id="facebook-avatar" class="comment-meta-facebook" value="">
+				<input type="hidden" name="fb_user_id" id="facebook-user_id" class="comment-meta-facebook" value="">
+				<input type="hidden" name="fb_access_token" id="facebook-access_token" class="comment-meta-facebook" value="">
+				<p class="comment-form-posting-as pa-facebook"><strong></strong> You are commenting using your Facebook account. <span class="comment-form-log-out">(&nbsp;<a href="javascript:HighlanderComments.doExternalLogout( 'facebook' );">Log&nbsp;Out</a>&nbsp;/&nbsp;<a href="http://thinkaurelius.com/2013/03/30/titan-server-from-a-single-server-to-a-highly-available-cluster/#" onclick="javascript:HighlanderComments.switchAccount();return false;">Change</a>&nbsp;)</span></p>
+			</div>
+	
+		</div>
+	</div>
+
+
+	<div id="comment-form-load-service" class="comment-form-service">
+		<div class="comment-form-posting-as-cancel"><a href="javascript:HighlanderComments.cancelExternalWindow();">Cancel</a></div>
+		<p>Connecting to %s</p>
+	</div>
+	
+	
+</div>
+
+
+<!-- Social Buttons -->
+
+
+<!-- Google +1:  Place this tag after the last +1 button tag. -->
+<script type="text/javascript">
+  (function() {
+  var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+  po.src = 'https://apis.google.com/js/plusone.js';
+  var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+  })();
+</script>
+
+<!-- Twitter Tweet -->
+<script>
+!function(d,s,id){
+  var js,fjs=d.getElementsByTagName(s)[0];
+  if(!d.getElementById(id)){
+    js=d.createElement(s);
+    js.id=id;js.src="//platform.twitter.com/widgets.js";
+    fjs.parentNode.insertBefore(js,fjs);
+ }
+}
+(document,"script","twitter-wjs");
+</script>
+
+<!-- Facebook -->
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_US/all.js#xfbml=1&appId=147792232061882";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+<!-- End Social -->
+
+
+
+<script type="text/javascript">
+jQuery(document).ready(function(){
+	var input = document.createElement( 'input' ),
+	    comment = jQuery( '#comment' );
+
+	if ( 'placeholder' in input ) {
+		comment.attr( 'placeholder', jQuery( '.comment-textarea label' ).remove().text() );
+	}
+
+	// Expando Mode: start small, then auto-resize on first click + text length
+	jQuery( '#comment-form-identity' ).hide();
+	jQuery( '#comment-form-subscribe' ).hide();
+	jQuery( '#commentform .form-submit' ).hide();
+
+	comment.css( { 'height':'10px' } ).one( 'focus', function() {
+		var timer = setInterval( HighlanderComments.resizeCallback, 10 )
+		jQuery( this ).animate( { 'height': HighlanderComments.initialHeight } ).delay( 100 ).queue( function(n) { clearInterval( timer ); HighlanderComments.resizeCallback(); n(); } );
+		jQuery( '#comment-form-identity' ).slideDown();
+		jQuery( '#comment-form-subscribe' ).slideDown();
+		jQuery( '#commentform .form-submit' ).slideDown();
+	});
+});
+</script>
+
+<div id="comment-form-subscribe" style="display: none;"> 
+	<p class="comment-subscription-form"><input type="checkbox" name="subscribe" id="subscribe" value="subscribe" style="width: auto;" tabindex="6"> <label class="subscribe-label" id="subscribe-label" for="subscribe" style="display: inline;">Notify me of follow-up comments via email.</label></p><p class="post-subscription-form"><input type="checkbox" name="subscribe_blog" id="subscribe_blog" value="subscribe" style="width: auto;" tabindex="7"> <label class="subscribe-label" id="subscribe-blog-label" for="subscribe_blog" style="display: inline;">Notify me of new posts via email.</label></p></div>
+
+												<p class="form-submit" style="display: none;">
+							<input name="submit" type="submit" id="comment-submit" value="Post Comment">
+							<input type="hidden" name="comment_post_ID" value="3863" id="comment_post_ID">
+<input type="hidden" name="comment_parent" id="comment_parent" value="0">
+						</p>
+						
+<input type="hidden" name="genseq" value="1364918297">
+<p style="display: none;"><input type="hidden" id="akismet_comment_nonce" name="akismet_comment_nonce" value="e73eba6982"></p><script type="text/javascript" src="./Titan Server  From a Single Server to a Highly Available Cluster   Aurelius_files/form.js"></script>
+<p style="display: none;"><input type="hidden" id="ak_js" name="ak_js" value="1364918297477"></p>					</form>
+							</div><!-- #respond -->
+			<div style="clear: both"></div>			
+</div><!-- #comments -->
+	</div>
+
+<div id="sidebar">
+
+	<div id="text-3" class="widget widget_text">			<div class="textwidget"></div>
+		</div>
+</div>
+</div>
+
+
+<div id="footer">
+	<div class="footerleft">
+		<p><a href="http://wordpress.com/?ref=footer" rel="generator">Blog at WordPress.com</a>.</p>
+    </div>
+    <div class="footerright">
+	    Theme: <a href="http://theme.wordpress.com/credits/thinkaurelius.com/" title="Learn more about how this site is customized with the Custom Design upgrade">Customized Enterprise</a> by <a href="http://www.studiopress.com/" rel="designer">StudioPress</a>.    </div>
+</div>
+
+</div>
+
+
+<script type="text/javascript">
+var _qevents = _qevents || [], wpcomQuantcastData = {"qacct":"p-18-mFEk4J448M","labels":",language.en,type.wpcom"};
+function wpcomQuantcastPixel( labels, options ) {
+	var i, defaults = wpcomQuantcastData, data = { event: 'ajax' };
+
+	labels  = labels  || '';
+	options = options || {};
+
+	if ( typeof labels != 'string' )
+		options = labels;
+
+	for ( i in defaults ) {
+		data[i] = defaults[i];
+	}
+
+	for ( i in options ) {
+		data[i] = options[i];
+	}
+
+	if ( data.labels ) {
+		data.labels += ',' + labels;
+	} else {
+		data.labels = labels;
+	}
+
+	_qevents.push( data );
+};
+(function() {var elem = document.createElement('script');elem.src = (document.location.protocol == "https:" ? "https://secure" : "http://edge") + ".quantserve.com/quant.js";elem.async = true;elem.type = "text/javascript";var scpt = document.getElementsByTagName('script')[0];scpt.parentNode.insertBefore(elem, scpt);  })();
+_qevents.push( wpcomQuantcastData );
+</script>
+<noscript>&lt;div style="display: none;"&gt;&lt;img src="//pixel.quantserve.com/pixel/p-18-mFEk4J448M.gif?labels=%2Clanguage.en%2Ctype.wpcom" height="1" width="1" alt="" /&gt;&lt;/div&gt;</noscript>
+
+<script type="text/javascript" src="./Titan Server  From a Single Server to a Highly Available Cluster   Aurelius_files/gprofiles.js"></script>
+<script type="text/javascript">
+/* <![CDATA[ */
+var WPGroHo = {"my_hash":""};
+/* ]]> */
+</script>
+<script type="text/javascript" src="./Titan Server  From a Single Server to a Highly Available Cluster   Aurelius_files/wpgroho.js"></script>
+<script>jQuery(document).ready(function($){ Gravatar.profile_cb = function( h, d ) { WPGroHo.syncProfileData( h, d );	}; Gravatar.my_hash = WPGroHo.my_hash; Gravatar.init( 'body', '#wp-admin-bar-my-account' ); });</script>	<div style="display:none">
+	<div class="grofile-hash-map-f871ec1a729a1478908fd2e8deb2510e">
+	</div>
+	</div>
+<script type="text/javascript">
+/* <![CDATA[ */
+var HighlanderComments = {"loggingInText":"Logging In\u2026","submittingText":"Posting Comment\u2026","postCommentText":"Post Comment","connectingToText":"Connecting to %s","commentingAsText":"%1$s: You are commenting using your %2$s account.","logoutText":"Log Out","loginText":"Log In","connectURL":"http:\/\/thinkaurelius.wordpress.com\/public.api\/connect\/?action=request","logoutURL":"http:\/\/thinkaurelius.wordpress.com\/wp-login.php?action=logout&_wpnonce=f18c917220","homeURL":"http:\/\/thinkaurelius.com\/","postID":"3863","gravDefault":"identicon","enterACommentError":"Please enter a comment","enterEmailError":"Please enter your email address here","invalidEmailError":"Invalid email address","enterAuthorError":"Please enter your name here","gravatarFromEmail":"This picture will show whenever you leave a comment. Click to customize it.","logInToExternalAccount":"Log in to use details from one of these accounts.","change":"Change","changeAccount":"Change Account","comment_registration":"","userIsLoggedIn":"","isJetpack":"0"};
+/* ]]> */
+</script>
+<script type="text/javascript" src="./Titan Server  From a Single Server to a Highly Available Cluster   Aurelius_files/script.js"></script>
+
+	<div id="bit" class="loggedout-follow-normal" style="bottom: -242px;">
+		<a class="bsub" href="javascript:void(0)"><span id="bsub-text">Follow</span></a>
+		<div id="bitsubscribe">
+
+					<h3><label for="loggedout-follow-field">Follow “Aurelius”</label></h3>
+
+			<form action="https://subscribe.wordpress.com/" method="post" accept-charset="utf-8" id="loggedout-follow">
+			<p>Get every new post delivered to your Inbox.</p>
+
+			<p id="loggedout-follow-error" style="display: none;"></p>
+
+						<p class="bit-follow-count">Join 73 other followers</p>
+			<p><input type="email" name="email" style="width: 95%; padding: 1px 2px" value="Enter your email address" onfocus="this.value=(this.value==&quot;Enter your email address&quot;) ? &quot;&quot; : this.value;" onblur="this.value=(this.value==&quot;&quot;) ? &quot;Enter email address&quot; : this.value;" id="loggedout-follow-field"></p>
+
+			<input type="hidden" name="action" value="subscribe">
+			<input type="hidden" name="blog_id" value="30995991">
+			<input type="hidden" name="source" value="http://thinkaurelius.com/2013/03/30/titan-server-from-a-single-server-to-a-highly-available-cluster/">
+			<input type="hidden" name="sub-type" value="loggedout-follow">
+
+			<input type="hidden" id="_wpnonce" name="_wpnonce" value="e81784e36d"><input type="hidden" name="_wp_http_referer" value="/2013/03/30/titan-server-from-a-single-server-to-a-highly-available-cluster/">
+			<p id="bsub-subscribe-button"><input type="submit" value="Sign me up"></p>
+			</form>
+					<div id="bsub-credit"><a href="http://wordpress.com/signup/?ref=lof">Powered by WordPress.com</a></div>
+		</div><!-- #bitsubscribe -->
+	</div><!-- #bit -->
+
+	<script type="text/javascript">
+		WPCOM_sharing_counts = {"http:\/\/thinkaurelius.com\/2013\/03\/30\/titan-server-from-a-single-server-to-a-highly-available-cluster\/":3863}	</script>
+<script type="text/javascript" src="./Titan Server  From a Single Server to a Highly Available Cluster   Aurelius_files/sharing.js"></script>
+		<script type="text/javascript">
+		jQuery(document).on( 'ready post-load', function(){
+			jQuery( 'a.share-twitter' ).on( 'click', function() {
+				window.open( jQuery(this).attr( 'href' ), 'wpcomtwitter', 'menubar=1,resizable=1,width=600,height=350' );
+				return false;
+			});
+		});
+		</script>
+				<script type="text/javascript">
+		jQuery(document).on( 'ready post-load', function(){
+			jQuery( 'a.share-facebook' ).on( 'click', function() {
+				window.open( jQuery(this).attr( 'href' ), 'wpcomfacebook', 'menubar=1,resizable=1,width=600,height=400' );
+				return false;
+			});
+		});
+		</script>
+				<iframe src="./Titan Server  From a Single Server to a Highly Available Cluster   Aurelius_files/master.html" id="likes-master" name="likes-master" style="display:none;"></iframe>
+		<div id="likes-other-gravatars"><div class="likes-text"><span>%d</span> bloggers like this:</div><ul class="wpl-avatars sd-like-gravatars"></ul></div>
+		<script type="text/javascript">
+		//<![CDATA[
+			var jetpackLikesWidgetQueue = [];
+			var jetpackLikesMasterReady = false;
+
+			function JetpackLikespostMessage( message, target ) {
+				if ( "string" === typeof message ){
+					try{
+						message = JSON.parse( message );
+					}
+					catch(e) {
+						return;
+					}
+				}
+
+				pm( {
+					target: target,
+					type: 'likesMessage',
+					data: message,
+					origin: '*'					
+				} );
+			}
+
+			function JetpackLikesMessageListener( event ) {
+				if ( "undefined" == typeof event.event )
+					return;
+
+				if ( 'masterReady' == event.event ) {
+					jQuery( document ).ready( function() {
+						jetpackLikesMasterReady = true;
+
+						var stylesData = {
+								event: 'injectStyles'
+						};
+
+						if ( jQuery( 'iframe.admin-bar-likes-widget' ).length > 0 ) {
+							JetpackLikespostMessage( { event: 'adminBarEnabled' }, window.frames[ 'likes-master' ] );
+
+							stylesData.adminBarStyles = {
+								background: jQuery( '#wpadminbar .quicklinks li#wp-admin-bar-wpl-like > a' ).css( 'background' )
+							};
+						}
+
+						if ( !window.addEventListener )
+							jQuery( '#wp-admin-bar-admin-bar-likes-widget' ).hide();
+
+						stylesData.textStyles = {
+							color: jQuery( '.sd-text-color').css( 'color' ),
+							fontFamily: jQuery( '.sd-text-color' ).css( 'font-family' ),
+							fontSize: jQuery( '.sd-text-color' ).css( 'font-size' ),
+							direction: jQuery( '.sd-text-color' ).css( 'direction' ),
+							fontWeight: jQuery( '.sd-text-color' ).css( 'font-weight' ),
+							fontStyle: jQuery( '.sd-text-color' ).css( 'font-style' ),
+							textDecoration: jQuery( '.sd-text-color' ).css('text-decoration')
+						};
+
+						stylesData.linkStyles = {
+							color: jQuery( '.sd-link-color' ).css('color'),
+							fontFamily: jQuery( '.sd-link-color' ).css('font-family'),
+							fontSize: jQuery( '.sd-link-color' ).css('font-size'),
+							textDecoration: jQuery( '.sd-link-color' ).css('text-decoration'),
+							fontWeight: jQuery( '.sd-link-color' ).css( 'font-weight' ),
+							fontStyle: jQuery( '.sd-link-color' ).css( 'font-style' )
+						};
+
+						JetpackLikespostMessage( stylesData, window.frames[ 'likes-master' ] );
+
+						var requests = [];
+						jQuery( '.jetpack-likes-widget-wrapper' ).each( function( i ) {
+							var regex = /like-(post|comment)-wrapper-(\d+)-(\d+)/;
+							var match = regex.exec( this.id );
+							if ( ! match || match.length != 4 )
+								return;
+
+							var info = {
+								blog_id: match[2],
+								width:   this.width
+							};
+
+							if ( 'post' == match[1] ) {
+								info.post_id = match[3];
+							} else if ( 'comment' == match[1] ) {
+								info.comment_id = match[3];
+							}
+
+							requests.push( info );
+						});
+
+						JetpackLikespostMessage( { event: 'initialBatch', requests: requests }, window.frames['likes-master'] );
+
+						jQuery( document ).on( 'inview', 'div.jetpack-likes-widget-unloaded', function() {
+							jetpackLikesWidgetQueue.push( this.id );
+						});
+					});
+				}
+
+				if ( 'showLikeWidget' == event.event ) {
+					setTimeout( JetpackLikesWidgetQueueHandler, 10 );
+					jQuery( '#' + event.id + ' .post-likes-widget-placeholder'  ).fadeOut( 'fast', function() {
+						jQuery( '#' + event.id + ' .post-likes-widget' ).fadeIn( 'fast', function() {
+							JetpackLikespostMessage( { event: 'likeWidgetDisplayed', blog_id: event.blog_id, post_id: event.post_id }, window.frames['likes-master'] );
+						});
+					});
+				}
+
+				if ( 'showOtherGravatars' == event.event ) {
+					var $container = jQuery( '#likes-other-gravatars' );
+					var $list = $container.find( 'ul' );
+
+					$container.hide();
+					$list.html( '' );
+
+					$container.find( '.likes-text span' ).text( event.total );
+
+					jQuery.each( event.likers, function( i, liker ) {
+						$list.append( '<li class="' + liker.css_class + '"><a href="' + liker.profile_URL + '" class="wpl-liker" rel="nofollow" target="_parent"><img src="' + liker.avatar_URL + '" alt="' + liker.name + '" width="30" height="30" style="padding-right: 3px;" /></a></li>');
+					} );
+
+					var offset = jQuery( "[name='" + event.parent + "']" ).offset();
+
+					$container.css( 'left', offset.left + event.position.left - 10 + 'px' );
+					$container.css( 'top', offset.top + event.position.top - 33 + 'px' );
+
+					var rowLength = Math.floor( event.width / 37 );
+					var height = ( Math.ceil( event.likers.length / rowLength ) * 37 ) + 13;
+					if ( height > 204 ) {
+						height = 204;
+					}
+
+					$container.css( 'height', height + 'px' );
+					$container.css( 'width', rowLength * 37 - 7 + 'px' );
+
+					$list.css( 'width', rowLength * 37 + 'px' );
+
+					$container.fadeIn( 'slow' );
+
+					var scrollbarWidth = $list[0].offsetWidth - $list[0].clientWidth;
+					if ( scrollbarWidth > 0 ) {
+						$container.width( $container.width() + scrollbarWidth );
+						$list.width( $list.width() + scrollbarWidth );
+					}
+				}
+			}
+
+			pm.bind( 'likesMessage', function(e) { JetpackLikesMessageListener(e); } );
+
+			jQuery( document ).click( function( e ) {
+				var $container = jQuery( '#likes-other-gravatars' );
+
+				if ( $container.has( e.target ).length === 0 ) {
+					$container.fadeOut( 'slow' );
+				}
+			});
+
+			function JetpackLikesWidgetQueueHandler() {
+				var wrapperID;
+				if ( ! jetpackLikesMasterReady ) {
+					setTimeout( JetpackLikesWidgetQueueHandler, 500 );
+					return;
+				}
+
+				if ( jetpackLikesWidgetQueue.length > 0 ) {
+					// We may have a widget that needs creating now
+					var found = false;
+					while( jetpackLikesWidgetQueue.length > 0 ) {
+						// Grab the first member of the queue that isn't already loading.
+						wrapperID = jetpackLikesWidgetQueue.splice( 0, 1 )[0];
+						if ( jQuery( '#' + wrapperID ).hasClass( 'jetpack-likes-widget-unloaded' ) ) {
+							found = true;
+							break;
+						}
+					}
+					if ( ! found ) {
+						setTimeout( JetpackLikesWidgetQueueHandler, 500 );
+						return;
+					}
+				} else if ( jQuery( 'div.jetpack-likes-widget-unloaded' ).length > 0 ) {
+					// Get the next unloaded widget
+					wrapperID = jQuery( 'div.jetpack-likes-widget-unloaded' ).first()[0].id;
+					if ( ! wrapperID ) {
+						// Everything is currently loaded
+						setTimeout( JetpackLikesWidgetQueueHandler, 500 );
+						return;
+					}
+				}
+
+				var $wrapper = jQuery( '#' + wrapperID );
+				$wrapper.find( 'iframe' ).remove();
+
+				if ( $wrapper.hasClass( 'slim-likes-widget' ) ) {
+					$wrapper.find( '.post-likes-widget-placeholder' ).after( "<iframe class='post-likes-widget jetpack-likes-widget' name='" + $wrapper.data( 'name' ) + "' height='22px' width='68px' frameBorder='0' scrolling='no' src='" + $wrapper.data( 'src' ) + "'></iframe>" );
+				} else {
+					$wrapper.find( '.post-likes-widget-placeholder' ).after( "<iframe class='post-likes-widget jetpack-likes-widget' name='" + $wrapper.data( 'name' ) + "' height='55px' width='100%' frameBorder='0' src='" + $wrapper.data( 'src' ) + "'></iframe>" );
+				}
+
+				$wrapper.removeClass( 'jetpack-likes-widget-unloaded' ).addClass( 'jetpack-likes-widget-loading' );
+
+				$wrapper.find( 'iframe' ).load( function( e ) {
+					var $iframe = jQuery( e.target );
+					$wrapper.removeClass( 'jetpack-likes-widget-loading' ).addClass( 'jetpack-likes-widget-loaded' );
+
+					JetpackLikespostMessage( { event: 'loadLikeWidget', name: $iframe.attr( 'name' ), width: $iframe.width() }, window.frames[ 'likes-master' ] );
+
+					if ( $wrapper.hasClass( 'slim-likes-widget' ) ) {
+						$wrapper.find( 'iframe' ).Jetpack( 'resizeable' );
+					}
+				});
+			}
+			setInterval( JetpackLikesWidgetQueueHandler, 250 );
+		//]]>
+		</script>
+<script type="text/javascript" src="./Titan Server  From a Single Server to a Highly Available Cluster   Aurelius_files/saved_resource(3).css"></script>
+<script type="text/javascript">
+	(function(){
+		var corecss = document.createElement('link');
+		var themecss = document.createElement('link');
+		var corecssurl = "http://s0.wp.com/wp-content/plugins/syntaxhighlighter/syntaxhighlighter3/styles/shCore.css?m=1363661091g&amp;ver=3.0.83c";
+		if ( corecss.setAttribute ) {
+				corecss.setAttribute( "rel", "stylesheet" );
+				corecss.setAttribute( "type", "text/css" );
+				corecss.setAttribute( "href", corecssurl );
+		} else {
+				corecss.rel = "stylesheet";
+				corecss.href = corecssurl;
+		}
+		document.getElementsByTagName("head")[0].insertBefore( corecss, document.getElementById("syntaxhighlighteranchor") );
+		var themecssurl = "http://s0.wp.com/wp-content/plugins/syntaxhighlighter/syntaxhighlighter3/styles/shThemeDefault.css?m=1363304414g&amp;ver=3.0.83c";
+		if ( themecss.setAttribute ) {
+				themecss.setAttribute( "rel", "stylesheet" );
+				themecss.setAttribute( "type", "text/css" );
+				themecss.setAttribute( "href", themecssurl );
+		} else {
+				themecss.rel = "stylesheet";
+				themecss.href = themecssurl;
+		}
+		//document.getElementById("syntaxhighlighteranchor").appendChild(themecss);
+		document.getElementsByTagName("head")[0].insertBefore( themecss, document.getElementById("syntaxhighlighteranchor") );
+	})();
+	SyntaxHighlighter.config.strings.expandSource = '+ expand source';
+	SyntaxHighlighter.config.strings.help = '?';
+	SyntaxHighlighter.config.strings.alert = 'SyntaxHighlighter\n\n';
+	SyntaxHighlighter.config.strings.noBrush = 'Can\'t find brush for: ';
+	SyntaxHighlighter.config.strings.brushNotHtmlScript = 'Brush wasn\'t configured for html-script option: ';
+	SyntaxHighlighter.defaults['pad-line-numbers'] = false;
+	SyntaxHighlighter.defaults['toolbar'] = false;
+	SyntaxHighlighter.all();
+</script>
+<script type="text/javascript" src="./Titan Server  From a Single Server to a Highly Available Cluster   Aurelius_files/devicepx.js"></script>
+<script type="text/javascript">
+// <![CDATA[
+(function() {
+try{
+  if ( window.external &&'msIsSiteMode' in window.external) {
+    if (window.external.msIsSiteMode()) {
+      var jl = document.createElement('script');
+      jl.type='text/javascript';
+      jl.async=true;
+      jl.src='/wp-content/plugins/ie-sitemode/custom-jumplist.php';
+      var s = document.getElementsByTagName('script')[0];
+      s.parentNode.insertBefore(jl, s);
+    }
+  }
+}catch(e){}
+})();
+// ]]>
+</script><script src="./Titan Server  From a Single Server to a Highly Available Cluster   Aurelius_files/w.js" type="text/javascript"></script>
+<script type="text/javascript">
+st_go({'blog':'30995991','v':'wpcom','tz':'-6','user_id':'0','post':'3863','subd':'thinkaurelius'});
+ex_go({'crypt':'UE40eW5QN0p8M2Y/RE1lYixwbDJzRzZYckplWEU4TnJmM2VdWTQsMi9FOG1PVVlfdEphOGJVbWRMY08yfEVJL09lOFIxSFpIQVtdcTlDZz8/R2FPLFB1WHBXVSZMNlZyMWxCd2NWMmtXamIweF1+JU1PeS0/bVlUSj9jNT1YM0swRnp3REFMb2FFRy5EMFRPbHVxbjd2TkdZcTVvL1UuLi0xWzhscTBmV3UmWE9zXW13fnBnMjVPfnRIcmIzNHZ4UlZpNXxqWy0yel9KJUIvM3IweUlGNW9xQ3JNNndwNSY3b0RRP2NPJVNWR2stQjZoMDkxbkJrRmN8dFEtX1U2S3xqUlQ/Nm1scUdIJndTeUhvT2oyLVVXU0xSRW9qOVZCW2FfWk49ZEMyKzhXdU83Mk5qbVUxSGJRRm5C'});
+addLoadEvent(function(){linktracker_init('30995991',3863);});
+	</script><img id="wpstats" src="./Titan Server  From a Single Server to a Highly Available Cluster   Aurelius_files/g.gif" alt=""><img id="wpstats2" src="./Titan Server  From a Single Server to a Highly Available Cluster   Aurelius_files/g(1).gif" alt="" style="display:none">
+<noscript>&lt;img src="http://stats.wordpress.com/b.gif?v=noscript" style="height:0px;width:0px;overflow:hidden" alt="" /&gt;</noscript>
+
+
+<img src="./Titan Server  From a Single Server to a Highly Available Cluster   Aurelius_files/botd.gif" style="width: 0px; height: 0px; overflow: hidden;"><div id="sbi_camera_button" class="sbi_search" style="left: 0px; top: 0px; position: absolute; width: 29px; height: 27px; border: none; margin: 0px; padding: 0px; z-index: 2147483647; display: none;"></div></body></html>

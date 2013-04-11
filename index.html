@@ -1,0 +1,683 @@
+
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+    <head>
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+        <title>TITAN: Distributed Graph Database - Real-Time, Transactional, Open-Source</title>
+        <meta name="description" content="" />
+        <meta name="viewport" content="width=device-width" />
+	<newrelic-header />
+
+        <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+
+	<link rel="canonical" href="http://www.tinkerpopbook.com/" />
+
+        <link rel="stylesheet" href="css/normalize.css" />
+        <link rel="stylesheet" href="css/main.css" />
+        <link rel="stylesheet" href="css/style.css" />
+	<link rel="stylesheet" href="http://pygments.org/media/pygments_style.css" />
+        <script src="js/vendor/modernizr-2.6.2.min.js"></script>
+
+
+       <!-- Place this tag in your head or just before your close body tag. -->
+       <!-- script type="text/javascript" src="https://apis.google.com/js/plusone.js"></script -->
+
+
+    </head>
+    <body class="home">
+        <!--[if lt IE 7]>
+            <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
+        <![endif]-->
+
+        <!-- Add your site or application content here -->
+
+	<div id="fb-root"></div>
+	<script>(function(d, s, id) {
+	  var js, fjs = d.getElementsByTagName(s)[0];
+	  if (d.getElementById(id)) return;
+	  js = d.createElement(s); js.id = id;
+	  js.src = "//connect.facebook.net/en_US/all.js#xfbml=1&appId=579686335384453";
+	  fjs.parentNode.insertBefore(js, fjs);
+	  }(document, 'script', 'facebook-jssdk'));
+	</script>
+
+	<div id="top">
+	<header>
+	  <div id="nav">
+            <ul role="navigation" class="page">
+              <li><a href="#overview">Overview</a></li>
+              <li><a href="#news">Quickstart</a></li>
+              <li><a href="#authors">Aurelius</a></li>
+              <li><a href="#book">TinkerPop</a></li>
+              <li class="last"><a href="#community">Community</a></li>
+            </ul>
+	  </div>
+	  <hgroup>
+	    <h1 class="title">TITAN</h1>
+	    <h2 class="tagline">Distributed Graph Database</h2>
+	  </hgroup>
+	  <div class="social" align="center">
+	    <div class="row">
+              <div class="span-one-third first">
+		<iframe src="http://ghbtns.com/github-btn.html?user=thinkaurelius&repo=titan&type=watch&count=true&size=large"
+			allowtransparency="true" frameborder="0" scrolling="0" width="170" height="30"></iframe>	
+	      </div>
+	      <div class="span-one-third center">
+		<div style="padding-top: 3px;">
+		  <div class="g-plusone"></div>
+		</div>
+	      </div>
+	      <div class="span-one-third last">
+		<a href="https://twitter.com/share" 
+		   class="twitter-share-button" 
+		   data-size="large" 
+		   data-url="http://goo.gl/W8SfU" 
+		   counturl="http://www.titandb.org"
+		   data-text="Titan Distributed #GraphDB supports #Cassandra or #HBase connects to #Hadoop By @aureliusgraphs" 
+		   data-via="titandb"
+		   data-related="aureliusgraphs,mbroecheler,twarko,spmallette,TinkerPopBook,espeed" 
+		   data-hashtags="BigData">Tweet</a>
+		<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+
+		<!-- div class="fb-like" 
+		     data-href="http://www.tinkerpopbook.com/" 
+		     data-send="false" 
+		     data-layout="button_count" 
+		     data-width="450" 
+		     data-show-faces="true" 
+		     data-font="arial"></div -->
+	      </div>
+	    </div>
+	  </div><!-- social -->
+	  <!-- p class="soon">(In the Works, See Below)</p -->
+	  <div id="summary">
+	    <div class="hero">
+	      <img src="/img/titan-logo2.png" />
+	    </div>
+	    <div class="download">
+	      <p>Titan is a distributed, real-time, transactional graph database that can use either
+	      Cassandra or HBase as its distributed data store. It's <a href="https://github.com/thinkaurelius/titan/blob/master/LICENSE.txt">Apache 2.0 licensed</a>, and it's the first native Blueprints implementation so it integrates with the entire <a href="#tinkerpop">TinkerPop stack</a>, which is BSD.</p>
+
+      <blockquote class="twitter-tweet"><p>Titan 0.3.0 Released: Geo, full-text, edge indexing. Stressed tested at 120 billion edges. <a href="http://t.co/XxfRm3nX4Y" title="http://thinkaurelius.com/news/">thinkaurelius.com/news/</a> <a href="https://twitter.com/search/%23graphdb">#graphdb</a> <a href="https://twitter.com/search/%23nosql">#nosql</a> <a href="https://twitter.com/search/%23bigdata">#bigdata</a></p>&mdash; aurelius (@aureliusgraphs) <a href="https://twitter.com/aureliusgraphs/status/317699047362277376">March 29, 2013</a></blockquote>
+      <script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+
+
+
+	    </div>	       
+	  </div>
+	  <div class="clearfix install"></div>
+	</header>
+	</div> <!-- top -->
+
+	<main>
+
+	  
+<div id="home_content" role="main" class="content">
+
+  <section id="overview">
+    <header>
+      <h2>OVERVIEW</h2>
+      <p class="subhead">
+	Titan is one piece of the Aurelius Graph Cluster, which also includes Faunus and Fulgora.</p>
+    </header>
+    <div class="row clearfix" align="center">
+
+      <p><a href="http://thinkaurelius.github.com/titan/"><img src="http://thinkaurelius.files.wordpress.com/2012/08/titan-head.png?w=75" alt="" title="Titan" width="75" class="alignleft" /></a> <a href="http://thinkaurelius.github.com/titan/">Titan</a> is an <a href="http://en.wikipedia.org/wiki/Online_transaction_processing">OLTP</a> distributed graph database capable of supporting tens of thousands of concurrent users interacting with a single massive-scale graph represented over a cluster of machines. The current distribution&#8217;s pluggable storage architecture provides connectivity to Apache <a href="http://cassandra.apache.org/">Cassandra</a>, Apache <a href="http://hbase.apache.org/">HBase</a>, and Oracle&#8217;s <a href="http://www.oracle.com/technetwork/products/berkeleydb/">BerkeleyDB</a>. Titan is a native <a href="http://blueprints.tinkerpop.com">Blueprints</a> enabled graph database and as such, it supports the full <a href="http://tinkerpop.com">TinkerPop</a> stack of technologies.</p>
+<p><a href="http://thinkaurelius.github.com/faunus/"><img src="http://thinkaurelius.files.wordpress.com/2012/08/faunus-head.png?w=75" alt="" title="Faunus" width="75" class="alignleft" /></a> <a href="http://thinkaurelius.github.com/faunus/">Faunus</a> is an <a href="http://en.wikipedia.org/wiki/Online_analytical_processing">OLAP</a> analytics engine for processing property graphs using <a href="http://hadoop.apache.org/">Hadoop</a>. Graphs are analyzed using a <a href="http://hadoop.apache.org/mapreduce/">MapReduce</a> implementation of the <a href="http://gremlin.tinkerpop.com/">Gremlin</a> graph traversal language. General use-cases include computing graph <a href="http://en.wikipedia.org/wiki/Graph_rewriting">derivations</a>/transformations and global graph statistics. Faunus can be extended with new operations written using MapReduce and <a href="http://blueprints.tinkerpop.com">Blueprints</a>. Titan connectivity is provided to allow for the global analysis of Titan graphs.</p>
+<p><img src="http://thinkaurelius.files.wordpress.com/2012/08/fulgora-head.png?w=75" alt="" title="Fulgora" width="75" class="alignleft" /> Fulgora is a compression-based, transaction-less, in-memory graph processor capable of storing billions of edges within the memory confines of a single machine. Fulgora is optimized for the execution of massively threaded, global graph algorithms. Algorithms are written using the <a href="http://blueprints.tinkerpop.com">Blueprints</a> graph API. [<strong>coming end of winter 2012</strong>]</p>
+
+      <img src="/img/aurelius-graph-cluster.png" width="700" />
+
+    </div>
+
+
+</section>
+
+  <section id="quickstart">
+    <header>
+      <h2>QUICKSTART</h2>
+      <p class="subhead">
+	Get Titan up and running on your local computer in 4 easy steps.
+      </p>
+    </header>
+
+<div class="clearfix"></div>
+
+<p>To download Titan, unzip it, and start Titan Server on the <code>localhost</code>, execute the following 4 shell commands:</p>
+
+<div class="hlcode">
+<div class="syntax"><pre><span class="gp">$</span> wget <a href="http://s3.thinkaurelius.com/downloads/titan/titan-cassandra-0.3.0.zip">http://s3.thinkaurelius.com/downloads/titan/titan-cassandra-0.3.0.zip</a>
+<span class="gp">$</span> unzip titan-cassandra-0.3.0.zip
+<span class="gp">$</span> <span class="nb">cd </span>titan-cassandra-0.3.0
+<span class="gp">$</span> sudo bin/titan.sh config/titan-server-rexster.xml config/titan-server-cassandra.properties
+<span class="go">...</span>
+<span class="go">13/03/27 12:40:35 INFO server.RexProRexsterServer: RexPro serving on port: [8184]</span>
+<span class="go">13/03/27 12:40:35 INFO server.HttpRexsterServer: Rexster Server running on: [http://localhost:8182]</span>
+<span class="go">13/03/27 12:40:35 INFO server.ShutdownManager: Bound shutdown socket to /127.0.0.1:8183. Starting listener thread for shutdown requests.</span>
+<span class="go">...</span>
+</pre></div>
+</div>
+
+<p>Titan Server embeds both Cassandra and a lightweight version of Rexster within the same JVM. You can connect to Titan from any programming language because Titan Server exposes the following language-agnostic endpoints:
+
+
+<ol class="bullets">
+<li>A <a href="https://github.com/tinkerpop/rexster/wiki/Basic-REST-API">HTTP RESTful endpoint</a> available at <a href="http://localhost:8182/graphs" rel="nofollow">http://localhost:8182/graphs</a></br>
+CRUD operations can be enacted via HTTP and JSON.</li>
+<li>A <a href="https://github.com/tinkerpop/rexster/wiki/RexPro">RexPro binary protocol endpoint</a> available on <b>port 8184</b>.<br />
+Arbitrarily complex <a href="https://github.com/tinkerpop/gremlin/wiki">Gremlin read/write operations</a> can be enacted via <a href="http://msgpack.org/">MessagePack</a>.</li>
+</ol>
+
+<div align="center"><img src="/img/titan-http-rexpro.png" /></div>
+
+<p>See the <a href="https://github.com/thinkaurelius/titan/wiki">Titan Wiki</a> for the complete manual, including the <a href="https://github.com/thinkaurelius/titan/wiki/Getting-Started">Getting Started Guide</a> and the <a href="http://www.youtube.com/watch?v=ZkAYA4Kd8JE">Titan introduction video</a> presented by Matthias. 
+
+</section>
+
+
+
+  <section id="authors">
+    <header>
+      <h2>AURELIUS</h2>
+      <p class="subhead"><a href="http://thinkaurelius.com/">Aurelius</a> is the team of computer scientists and world-class software engineers behind Titan and the Aurelius Graph Cluster.</p>
+    </header>
+
+
+    <ul>
+    <li class="clearfix">
+      <div class="photo" ><img src="img/matthias.jpg" /></div>
+      <div class="bio">
+	<div><a href="http://www.matthiasb.com/">Dr. Matthias Broecheler</a> is the lead developer of the distributed graph database Titan and has researched large scale graph database systems for more than 5 years. His award-winning research includes high performance index structures and query answering algorithms for graph structured data. In addition, he developed the Probabilistic Similarity Logic (PSL) machine learning framework to analyze and reason about multi-relational data. Matthias holds a Ph.D. in Computer Science from the University of Maryland.
+</div> 
+	<!-- div class="social">
+	  <a href="https://twitter.com/MBroecheler"><img src="img/twitter.png" /></a>
+	  <a href="https://plus.google.com/107719025689594501675"><img src="img/google.png" /></a>
+	  <a href="http://www.linkedin.com/in/matthiasbroecheler"><img src="img/linkedin.png" /></a>
+	  <a href="https://github.com/mbroecheler"><img src="img/github.png" /></a>
+	</div>
+	<div class="work">
+	  <a href="http://thinkaurelius.github.com/titan/">Titan</a>: 
+	  Real-time, distributed, transactional, massively scalable graph database.
+	</div>
+	<div class="work">
+	  <a href="http://www.youtube.com/watch?v=ZkAYA4Kd8JE">C* 2012 Presntation</a>: 
+	  Titan - Big Graph Data With Cassandra.
+	</div -->
+      </div>
+    </li>
+    <li class="clearfix">
+      <div class="photo"><img class="photo" src="img/stephen.png" style="border: 0;"></div>
+      <div class="bio">
+	<div><a href="http://stephen.genoprime.com/">Stephen Mallette</a> has been developing commercial software for about fifteen years, with most of those years focused on healthcare-based applications. He is a primary contributor to the TinkerPop stack and the lead developer of Rexster, a graph server.  Stephen also maintains the GremlinDocs website, which offers learn-by-example documentation of the Gremlin graph traversal language.  He received his Bachelor of Science in Management Information Systems and Decision Sciences from George Mason University.
+</div>
+	<!-- div class="social">
+	  <a href="https://twitter.com/spmallette">
+	    <img src="img/twitter.png"></a>
+	  <a href="https://plus.google.com/113722673368287424930">
+	    <img src="img/google.png"></a>
+	  <a href="http://www.linkedin.com/pub/stephen-mallette/1/34a/569">
+	    <img src="img/linkedin.png"></a>
+	  <a href="https://github.com/spmallette"><img src="img/github.png"></a>
+	</div>
+	<div class="work">
+	  <a href="https://github.com/tinkerpop/rexster/wiki">Rexster</a>: 
+	  Graph database server.
+	</div>
+	<div class="work">
+	  <a href="https://github.com/tinkerpop/rexster/wiki/RexPro">RexPro</a>: 
+	  Binary protocol for Rexster.
+	</div -->
+      </div>
+    </li>
+    <li class="clearfix">
+      <div class="photo"><img src="img/marko.jpg" border="1"></div>
+      <div class="bio">
+	<div><a href="http://markorodriguez.com/">Dr. Marko Rodriguez</a> has focused his academic and commercial career on graph theory, network science, and graph-system architecture and development. He is a TinkerPop co-founder and serves as the lead developer of the Gremlin graph traversal language. Marko received his Bachelors in Cognitive Science from UC San Diego, his Masters and Ph.D. in Computer Science from UC Santa Cruz and was a Director’s Fellow at the Center for Nonlinear Studies of the Los Alamos National Laboratory.</div>
+	<!-- div class="social">
+	  <a href="https://twitter.com/twarko">
+	    <img src="img/twitter.png"></a>
+	  <a href="https://plus.google.com/114771576750200044131">
+	    <img src="img/google.png"></a>
+	  <a href="http://www.linkedin.com/in/markorodriguez">
+	    <img src="img/linkedin.png"></a>
+	  <a href="https://github.com/okram">
+	    <img src="img/github.png"></a>
+	</div>
+	<div class="work">
+	  <a href="https://github.com/tinkerpop/gremlin/wiki">Gremlin</a>: 
+	  Graph traversal language.
+	</div>
+	<div class="work">
+	  <a href="http://channel9.msdn.com/Shows/Going+Deep/YOW-2012-Marko-Rodriguez-Graph-Systems-and-Databases">YOW! 2012 Interview:
+	  Graph Systems and Databases</a>. 
+	</div -->
+      </div>
+    </li>
+
+    </ul>
+
+    <div style="text-align: center; paddin-bottom: 0 margin-bottom: 0;">
+      <p><a href="mailto:info@thinkaurelius.com">Contact Aurelius</a> to find out about its support offerings.</p>
+    </div>
+
+    </section><!-- aurelius -->
+
+
+  <section id="tinkerpop">
+
+    <header>
+      <h2>TINKERPOP</h2>
+      <p class="subhead"><a href="http://www.tinkerpop.com/">TinkerPop</a> is a developers group that has built much of the  open-source software stack for the emerging graph database landscape.</p>
+    </header>
+
+    <div class="intro">
+      <p>The <a href="https://github.com/tinkerpop/">TinkerPop toolkit</a> is a sophisticated suite of graph-based technologies to which many of the members of Aurelius contribute. The TinkerPop stack is utilized in all of the Aurelius-specific products.</p
+    </div>
+
+
+      <div class="toolkit row">
+        <div class="span-one-third">
+	  <a href="http://blueprints.tinkerpop.com/">
+            <h3>Blueprints</h3>
+	    <div class="icon">
+              <img src="img/blueprints-character.png" />
+	    </div>
+	    <div class="description">
+	      <p>
+		Blueprints is a property graph model interface with provided implementations. 
+		Databases that implement the Blueprints interfaces automatically support 
+		Blueprints-enabled applications.
+	      </p>
+            </div>
+	  </a>
+	  </div>
+        <div class="span-one-third">
+	  <a href="http://pipes.tinkerpop.com/">
+            <h3>Pipes</h3>
+	    <div class="icon">
+	      <img src="img/pipes-character.png" />
+	    </div>
+	    <div class="description">
+	      <p>
+		Pipes is a dataflow framework that enables the splitting, merging, filtering, and 
+		transformation of data from input to output. Computations are evaluated in a 
+		memory-efficient, lazy fashion.
+	      </p>
+	    </div>
+	  </a>
+	</div>
+        <div class="span-one-third">
+	  <a href="http://gremlin.tinkerpop.com/">
+            <h3>Gremlin</h3>         
+	    <div class="icon">
+              <img src="img/gremlin-character.png" />
+	    </div>
+	    <div>
+	      <p>
+		Gremlin is a domain specific language for traversing property graphs. This language 
+		has application in the areas of graph query, analysis, and manipulation.
+	      </p>
+	    </div>
+	  </a>
+        </div>
+      </div><!-- row -->
+
+      <div class="toolkit row">
+
+        <div class="span-one-third">
+	  <a href="http://frames.tinkerpop.com">
+            <h3>Frames</h3>
+	    <div class="icon">
+              <img src="img/frames-character.png" />
+	    </div>
+	    <div class="description">
+	      <p>
+		Frames exposes the elements of a Blueprints graph as Java objects. 
+		Instead of writing software in terms of vertices and edges, with Frames, 
+		software is written in terms of domain objects and their relationships to 
+		each other.
+	      </p>
+	    </div>
+	  </a>
+        </div>
+
+        <div class="span-one-third">
+	  <a href="http://furnace.tinkerpop.com/">
+            <h3>Furnace</h3>
+	    <div class="icon">
+              <img src="img/furnace-character.png" />
+	    </div>
+	    <div class="decription">
+	      <p>
+		Furnace is a property graph algorithms package. It provides implementations for 
+		standard graph analysis algorithms that can be applied to property graphs in a 
+		meaningful ways.
+	      </p>
+	    </div>
+	  </a>
+	</div>
+
+        <div class="span-one-third">
+	  <a href="http://rexster.tinkerpop.com">
+            <h3>Rexster</h3>
+	    <div class="icon">
+              <img src="img/rexster-character.png" />
+	    </div>
+	    <div class="descripton">
+	      <p>
+		Rexster is a multi-faceted graph server that exposes any Blueprints graph through 
+		several mechanisms with a general focus on REST.
+	      </p>
+            </div>
+	  </a>
+	</div>
+      </div>
+
+  </section>
+
+
+
+  <section id="community">
+    <header>
+      <h2>COMMUNITY</h2>
+      <p class="subhead">The graph-database ecosystem is growing fast.<br />
+	Here a few things to check out.</p>
+    </header>
+    
+
+      <div class="row">
+        <div class="span-one-third">
+          <h3>TinkerPop Core Contributors</h3>
+	  <div class="description">
+	    <ul class="members-list">
+              <li class="">
+		<a href="https://github.com/alexaverbuch"><img class="gravatar" height="48" src="https://secure.gravatar.com/avatar/d68871d265748f5bb7efdfacb80f6308?s=140&amp;d=https://a248.e.akamai.net/assets.github.com%2Fimages%2Fgravatars%2Fgravatar-user-420.png" width="48" /></a>
+		<h4>
+		  <a href="https://github.com/alexaverbuch" itemprop="members">alexaverbuch</a>
+                  <em>Alex Averbuch</em>
+		</h4>
+              </li>
+              <li class="">
+		<a href="https://github.com/bdeggleston"><img class="gravatar" height="48" src="https://secure.gravatar.com/avatar/e915a6e67f6e977877ec07c2e19d7fb5?s=140&amp;d=https://a248.e.akamai.net/assets.github.com%2Fimages%2Fgravatars%2Fgravatar-user-420.png" width="48" /></a>
+		<h4>
+		  <a href="https://github.com/bdeggleston" itemprop="members">bdeggleston</a>
+                  <em>Blake Eggleston</em>
+		</h4>
+              </li>
+              <li class="">
+		<a href="https://github.com/espeed"><img class="gravatar" height="48" src="https://secure.gravatar.com/avatar/21c5aeda0e3c59037354ab55992e80c5?s=140&amp;d=https://a248.e.akamai.net/assets.github.com%2Fimages%2Fgravatars%2Fgravatar-user-420.png" width="48" /></a>
+		<h4>
+		  <a href="https://github.com/espeed" itemprop="members">espeed</a>
+                  <em>James Thornton</em>
+		</h4>
+              </li>
+              <li class="">
+		<a href="https://github.com/joshsh"><img class="gravatar" height="48" src="https://secure.gravatar.com/avatar/6d086b52a2bcce77f3c8c8689af53b31?s=140&amp;d=https://a248.e.akamai.net/assets.github.com%2Fimages%2Fgravatars%2Fgravatar-user-420.png" width="48" /></a>
+		<h4>
+		  <a href="https://github.com/joshsh" itemprop="members">joshsh</a>
+                  <em>Joshua Shinavier</em>
+		</h4>
+              </li>
+              <li class="">
+		<a href="https://github.com/mbroecheler"><img class="gravatar" height="48" src="https://secure.gravatar.com/avatar/8971361cb5dd026c1948f70829ef4b9c?s=140&amp;d=https://a248.e.akamai.net/assets.github.com%2Fimages%2Fgravatars%2Fgravatar-user-420.png" width="48" /></a>
+		<h4>
+		  <a href="https://github.com/mbroecheler" itemprop="members">mbroecheler</a>
+                  <em>Matthias Broecheler</em>
+		</h4>
+              </li>
+              <li class="">
+		<a href="https://github.com/okram"><img class="gravatar" height="48" src="https://secure.gravatar.com/avatar/fb12ea6a621399613aae4d692533e067?s=140&amp;d=https://a248.e.akamai.net/assets.github.com%2Fimages%2Fgravatars%2Fgravatar-user-420.png" width="48" /></a>
+		<h4>
+		  <a href="https://github.com/okram" itemprop="members">okram</a>
+                  <em>Marko A. Rodriguez</em>
+		</h4>
+              </li>
+              <li class="">
+		<a href="https://github.com/pangloss"><img class="gravatar" height="48" src="https://secure.gravatar.com/avatar/1202c95dec14eee416717e8c0add0f0c?s=140&amp;d=https://a248.e.akamai.net/assets.github.com%2Fimages%2Fgravatars%2Fgravatar-user-420.png" width="48" /></a>
+		<h4>
+		  <a href="https://github.com/pangloss" itemprop="members">pangloss</a>
+                  <em>Darrick Wiebe</em>
+		</h4>
+              </li>
+              <li class="">
+		<a href="https://github.com/peterneubauer"><img class="gravatar" height="48" src="https://secure.gravatar.com/avatar/840ccffd0e89333b608b595ce4782720?s=140&amp;d=https://a248.e.akamai.net/assets.github.com%2Fimages%2Fgravatars%2Fgravatar-user-420.png" width="48" /></a>
+		<h4>
+		  <a href="https://github.com/peterneubauer" itemprop="members">peterneubauer</a>
+                  <em>Peter Neubauer</em>
+		</h4>
+              </li>
+              <li class="">
+		<a href="https://github.com/pierredewilde"><img class="gravatar" height="48" src="https://secure.gravatar.com/avatar/4631280e2c56e71d3313c24d821e48c2?s=140&amp;d=https://a248.e.akamai.net/assets.github.com%2Fimages%2Fgravatars%2Fgravatar-user-420.png" width="48" /></a>
+		<h4>
+		  <a href="https://github.com/pierredewilde" itemprop="members">pierredewilde</a>
+                  <em>Pierre De Wilde</em>
+		</h4>
+              </li>
+              <li class="">
+		<a href="https://github.com/spmallette"><img class="gravatar" height="48" src="https://secure.gravatar.com/avatar/fd9d045ca36173a4db8c870cd8ab7eb6?s=140&amp;d=https://a248.e.akamai.net/assets.github.com%2Fimages%2Fgravatars%2Fgravatar-user-420.png" width="48" /></a>
+		<h4>
+		  <a href="https://github.com/spmallette" itemprop="members">spmallette</a>
+                  <em>Stephen Mallette</em>
+		</h4>
+              </li>
+              <li class="">
+		<a href="https://github.com/xedin"><img class="gravatar" height="48" src="https://secure.gravatar.com/avatar/7053304e71afc7213099877eb6d7bc92?s=140&amp;d=https://a248.e.akamai.net/assets.github.com%2Fimages%2Fgravatars%2Fgravatar-user-420.png" width="48" /></a>
+		<h4>
+		  <a href="https://github.com/xedin" itemprop="members">xedin</a>
+                  <em>Pavel Yaskevich</em>
+		</h4>
+              </li>
+              <li class="">
+		<a href="https://github.com/lvca"><img class="gravatar" height="48" src="https://secure.gravatar.com/avatar/65da0e51311329fa829470b4ff0214a4?s=140&amp;d=https://a248.e.akamai.net/assets.github.com%2Fimages%2Fgravatars%2Fgravatar-user-420.png" width="48" /></a>
+		<h4>
+		  <a href="https://github.com/lvca" itemprop="members">lvca</a>
+                <em>Luca Garulli</em>
+		</h4>
+              </li>
+
+	    </ul>
+          </div><!-- description -->
+	</div><!-- column -->
+
+
+        <div class="span-one-third">
+	  <h3>Videos</h3>
+	  <ul class="spaced">
+	    <li><a href="http://channel9.msdn.com/Shows/Going+Deep/YOW-2012-Marko-Rodriguez-Graph-Systems-and-Databases">Marko Rodriguez Interview @ YOW! 2012</a></li>
+	    <li><a href="http://www.youtube.com/watch?v=ZkAYA4Kd8JE">Titan - Big Graph Data With Cassandra</a></li>
+	    <li><a href="http://www.youtube.com/watch?v=5wpTtEBK4-E">Gremlin Screencast Demo</a></li>
+	    <li><a href="http://vimeo.com/13213184">Graph Traversal Programming Pattern</a></li>
+	    <li><a href="http://vimeo.com/26377162">Pathology of Graph Databases</a></li>
+	    <li><a href="http://www.youtube.com/watch?v=5VjtmYtNNic">What can Facebook, Amazon and Google teach us about society and about ourselves?</a></li>
+	    <li><a href="http://www.youtube.com/watch?v=DooMvBRMNY4">Perspectives on Social Phenomena in Online Networks</a></li>
+	    <li><a href="http://www.youtube.com/watch?v=GBuekJkQR3o">Cascading Behavior in Complex Networks</a></li>
+	    <li><a href="http://www.youtube.com/playlist?list=PLPcQPsvcfruWF5Ru30xiPX_pjIMhNDeXN">Discrete Math</a> (<a href="http://aduni.org/">ArsDigita University</a>)</li>
+	    <li><a href="http://theory.stanford.edu/~tim/">Algorithms: Design and Analysis</a> (Stanford)</li>
+
+	    <li><a href="https://www.coursera.org/course/algs4partI">Algorithms, Part I</a> (Coursera)</li>
+	    <li><a href="https://www.coursera.org/course/algs4partII">Algorithms, Part II</a> (Coursera)</li>
+	    <li><a href="https://www.coursera.org/course/pgm">Probabilistic Graphical Models</a> (Coursera)</li>
+
+
+
+	  </ul>
+
+
+	  <h3>Books</h3>
+
+	  <ul class="spaced">
+
+	    <li><a href="http://www.cs.cornell.edu/home/kleinber/networks-book/">Networks, Crowds, and Markets</a><br />
+	    by <a href="http://www.arts.cornell.edu/econ/deasley/">David Easley</a> and <a href="http://www.cs.cornell.edu/home/kleinber/">Jon Kleinberg</a>
+	    </li>
+
+	    <li><a href="http://www.amazon.com/Networks-Introduction-Mark-Newman/dp/0199206651">Networks: An Introduction</a><br />
+	      by <a href="http://www-personal.umich.edu/~mejn/">Mark Newman</a></li>
+
+	    <li><a href="http://www.amazon.com/Network-Analysis-Methodological-Foundations-Theoretical/dp/3540249796">Network Analysis: Methodological Foundations</a><br />
+	    by <a href="http://www.cs.le.ac.uk/people/te17/">Thomas Erlebach</a></li>
+
+	    <li><a href="http://www.amazon.com/Algorithms-Language-Algebra-Software-Environments/dp/0898719909">Graph Algorithms in the Language of Linear Algebra</a><br />
+	    by <a href="http://www.mit.edu/~kepner/">Jeremy Kepner</a> and 
+	    <a href="http://www.cs.ucsb.edu/~gilbert/">John Gilbert</a></li>
+
+	    <li><a href="https://code.google.com/p/graphbook/">Algorithmic Graph Theory</a> (GPL)<br />
+	    by 
+	    <a href="http://www.wdjoyner.org">David Joyner</a>, 
+	    <a href="http://sage.math.washington.edu/home/mvngu/">Minh Van Nguyen</a>, and 
+	    <a href="http://www.usna.edu/Users/math/dphillip/">David Phillips</a>
+	    </li>
+
+	    <li>
+	      <a href="http://www.springer.com/book/978-1-84628-969-9">Graph Theory</a>
+	      <div>by <a href="http://en.wikipedia.org/wiki/John_Adrian_Bondy">J.A. Bondy</a> and 
+	      <a href="http://en.wikipedia.org/wiki/U._S._R._Murty">U.S.R. Murty</a></div>
+	    </li>
+
+	    <li>
+	      <a href="http://www.iro.umontreal.ca/~hahn/IFT3545/GTWA.pdf">Graph Theory with Applications</a>
+	      <div>by <a href="http://en.wikipedia.org/wiki/John_Adrian_Bondy">J.A. Bondy</a> and 
+	      <a href="http://en.wikipedia.org/wiki/U._S._R._Murty">U.S.R. Murty</a></div>
+	    </li>
+
+	      <li><a href="http://diestel-graph-theory.com/">Graph Theory, 4th Ed.</a>
+	    <div>by <a href="http://www.math.uni-hamburg.de/home/diestel/">Reinhard Diestel</a></div>
+	    </li>
+
+	    <li><a href="http://www.cs.princeton.edu/~wayne/kleinberg-tardos/">Algorithm Design</a><br />
+	    by <a href="http://www.cs.cornell.edu/home/kleinber/">Jon Kleinberg</a> and <a href="http://www.cs.cornell.edu/people/eva/eva.html">&Eacute;va Tardos</a></li>
+
+
+	    <li><a href="http://pgm.stanford.edu/">Probabilistic Graphical Models</a><br />
+	    by <a href="http://ai.stanford.edu/~koller/">Daphne Koller</a> and <a href="http://www.cs.huji.ac.il/~nir/">Nir Friedman</a>
+	    </li>
+
+	  </ul>
+	  	  
+        </div><!-- column -->
+
+
+
+        <div class="span-one-third">
+	  <h3>Papers</h3>
+
+	  <ul class="spaced">
+
+	    <li><a href="http://arxiv.org/abs/cond-mat/0303516/">Structure and Function of Complex Networks</a><br />
+	    by <a href="http://www-personal.umich.edu/~mejn/">Mark Newman</a></li>
+
+	  </ul>
+
+          <h3>Blog Posts</h3>
+	  <ul class="spaced">
+
+
+	    <li><a href="http://thinkaurelius.com/2013/03/30/titan-server-from-a-single-server-to-a-highly-available-cluster/">Titan Server: From a Single Server to a Highly Available Cluster</a></li>
+
+	    <li><a href="http://thinkaurelius.com/2013/02/04/polyglot-persistence-and-query-with-gremlin/">Polyglot Persistence and Query with Gremlin</a></li>
+	    <li><a href="http://markorodriguez.com/2013/01/09/on-graph-computing/">On Graph Computing</a></li>
+	    <li><a href="http://hortonworks.com/blog/big-graph-data-on-hortonworks-data-platform/">Big Graph Data on Hortonworks Data Platform</a></li>
+	    <li><a href="http://thinkaurelius.com/2012/11/11/faunus-provides-big-graph-data-analytics/">Faunus Provides Big Graph Data Analytics</a></li>
+	    <li><a href="http://thinkaurelius.com/2012/10/25/a-solution-to-the-supernode-problem/">A Solution to the Supernode Problem</a></li>
+	    <li><a href="http://thinkaurelius.com/2012/10/17/deploying-the-aurelius-graph-cluster/">Deploying the Aurelius Graph Cluster</a></li>
+	    <li><a href="http://thinkaurelius.com/2012/08/06/titan-provides-real-time-big-graph-data/">Titan Provides Real-Time Big Graph Data</a></li>
+	    <li><a href="http://thinkaurelius.com/2012/05/08/structural-abstractions-in-brains-and-graphs/">Structural Abstractions in Brains and Graphs</a></li>
+	    <li><a href="http://thinkaurelius.com/2012/04/21/loopy-lattices/">Loopy Lattices</a></li>
+	    <li><a href="http://thinkaurelius.com/2012/04/06/multitenant-graph-applications/">Multitenant Graph Applications</a></li>
+	    <li><a href="http://thinkaurelius.com/2012/03/22/understanding-the-world-using-tables-and-graphs/">Understanding the World Using Tables &amp; Graphs</a></li>
+	    <li><a href="http://markorodriguez.com/2012/03/07/exploring-wikipedia-with-gremlin-graph-traversals/">Exploring WikiPedia with Gremlin Graph Traversals</a></li>
+	    <li><a href="http://thinkaurelius.com/2012/02/05/graph-degree-distributions-using-r-over-hadoop/">Graph Degree Distributions Using R Over Hadoop</a></li>	    
+	    <li><a href="http://thinkaurelius.com/2012/01/10/graph-theory-and-network-science/">Graph Theory and Network Science</a></li>
+	    <li><a href="http://markorodriguez.com/2011/09/22/a-graph-based-movie-recommender-engine/">A Graph-Based Movie Recommender Engine</a></li>
+	    <li><a href="http://markorodriguez.com/2011/08/03/on-the-nature-of-pipes/">On the Nature of Pipes</a></li>
+	    <li><a href="http://markorodriguez.com/2011/04/19/local-and-distributed-traversal-engines/">Local and Distributed Traversal Engines</a></li>
+	    <li><a href="http://markorodriguez.com/2011/03/30/global-vs-local-graph-ranking/">Global vs. Local Graph Ranking</a></li>
+	    <li><a href="http://markorodriguez.com/2011/02/23/knowledge-representation-and-reasoning-with-graph-databases/">Knowledge Representation and Reasoning with Graph Databases</a></li>
+	    <li><a href="http://markorodriguez.com/2011/02/08/property-graph-algorithms/">Property Graph Algorithms</a></li>
+
+	  </ul>
+	</div><!-- column -->
+
+      </div><!-- row -->
+
+      <div class="row">
+        <div class="span-one-third">
+          <h3>Supported Datastores</h3>
+	  <ul>
+	    <li><a href="https://github.com/thinkaurelius/titan/wiki/Using-Cassandra">Cassandra</a></li>
+	    <li><a href="https://github.com/thinkaurelius/titan/wiki/Using-HBase">HBase</a></li>
+	    <li><a href="https://github.com/thinkaurelius/titan/wiki/Using-BerkeleyDB">Berkeley DB</a></li>
+	  </ul>
+	</div>
+        <div class="span-one-third">
+          <h3>Clients</h3>
+	  
+	  <ul>
+	    <li><a href="http://bulbflow.com/">Bulbs</a> (Python)</li> 
+	    <li><a href="https://github.com/StartTheShift/thunderdome">Thunderdome</a> (Python)</li>
+	    <li><a href="https://github.com/bdeggleston/rexpro-python">RexPro-Python</a> (Python)</li>
+	    <li><a href="https://github.com/tinkerpop/rexster/wiki/RexPro-Java">RexPro-Java</a> (Java)</li>
+	    <li><a href="https://github.com/zmaril/hermes">Hermes</a> (Clojure)</li>
+	  </ul>
+	  
+
+	</div>
+        <div class="span-one-third">
+          <h3>Mailing Lists</h3>
+          <ul>
+	    <li><a href="https://groups.google.com/forum/#!forum/gremlin-users">Gremlin Users Group</a></li>
+	    <li><a href="https://groups.google.com/forum/?fromgroups#!forum/aureliusgraphs">Aurelius Discussion Group</a></li>
+	    <li><a href="http://cassandra.apache.org/">Cassandra Mailing Lists</a></li>
+	    <li><a href="http://hbase.apache.org/mail-lists.html">HBase Mailing Lists</a></li>
+	    <li><a href="http://www.oracle.com/technetwork/products/berkeleydb/community/index.html">Berkeley DB Forums</a></li>
+	  </ul>
+        </div><!-- column -->
+      </div><!-- row -->
+
+
+    </section><!-- community -->
+
+  </div><!-- content -->
+</main>
+
+<footer>
+  <div id="copyright">Sponsored by <a href="http://www.thinkaurelius.com/">Aurelius</a></div>  
+</footer>
+
+
+<!-- Place this tag after the last +1 button tag. -->
+<script type="text/javascript">
+  (function() {
+    var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+    po.src = 'https://apis.google.com/js/plusone.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+  })();
+</script>
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+<script>window.jQuery || document.write('<script src="js/vendor/jquery-1.8.3.min.js"><\/script>')</script>
+<script src="js/plugins.js"></script>
+<script src="js/main.js"></script>
+
+<!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
+<script type="text/javascript">
+	  
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-39333748-1']);
+  _gaq.push(['_setDomainName', 'tinkerpopbook.com']);
+  _gaq.push(['_trackPageview']);
+  
+  (function() {
+  var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+  ga.src = ('https:' == document.location.protocol ? 'https://' : 'http://') + 'stats.g.doubleclick.net/dc.js';
+  var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+<newrelic-footer />
+</body>
+</html>
